@@ -3,15 +3,15 @@ package MoviePortal;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.Set;
+import java.util.List;
 
 @XmlRootElement(name = "moviePortal")
 public class MoviePortal {
     private String name;
-    private Set<User> users;
-    private Set<Movie> movies;
+    private List<User> users;
+    private List<Movie> movies;
 
-    public MoviePortal(String name, Set<User> users, Set<Movie> movies) {
+    public MoviePortal(String name, List<User> users, List<Movie> movies) {
         this.name = name;
         this.users = users;
         this.movies = movies;
@@ -27,20 +27,20 @@ public class MoviePortal {
     }
     @XmlElementWrapper(name = "users")
     @XmlElement(name = "user")
-    public Set<User> getUsers() {
+    public List<User> getUsers() {
         return users;
     }
 
-    public void setUsers(Set<User> users) {
+    public void setUsers(List<User> users) {
         this.users = users;
     }
     @XmlElementWrapper(name = "movies")
     @XmlElement(name = "movie")
-    public Set<Movie> getMovies() {
+    public List<Movie> getMovies() {
         return movies;
     }
 
-    public void setMovies(Set<Movie> movies) {
+    public void setMovies(List<Movie> movies) {
         this.movies = movies;
     }
 

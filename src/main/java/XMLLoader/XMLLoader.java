@@ -1,6 +1,9 @@
 package XMLLoader;
 
-import MoviePortal.*;
+import MoviePortal.Movie;
+import MoviePortal.MoviePortal;
+import MoviePortal.Rate;
+import MoviePortal.User;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -8,18 +11,21 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 public class XMLLoader {
     public static void main(String[] args) {
-        Set<User> userSet = new HashSet<User>();
+        ArrayList<User> userSet = new ArrayList<User>();
         userSet.add(new User(
-                        "Алекс",
-                        new ArrayList<Rate>(),
-                        "mail@example.com",
-                        "asdad"));
-        Set<Movie> movieSet = new HashSet<Movie>();
+                "Алекс",
+                new ArrayList<Rate>(),
+                "mail@example.com",
+                "asdad"));
+        userSet.add(new User(
+                "Маша",
+                new ArrayList<Rate>(),
+                "masha@example.com",
+                "klkwgualsbrg"));
+        ArrayList<Movie> movieSet = new ArrayList<Movie>();
         MoviePortal portal = new MoviePortal("КиноПоиск", userSet, movieSet);
         save(portal);
 
