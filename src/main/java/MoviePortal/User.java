@@ -15,7 +15,7 @@ public class User {
         this.eMail = eMail;
         this.passwordHash = passwordHash;
     }
-
+    public User(){};
     public String getName() {
         return name;
     }

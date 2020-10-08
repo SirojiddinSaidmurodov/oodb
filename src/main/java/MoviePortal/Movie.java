@@ -18,7 +18,7 @@ public class Movie {
         this.actors = actors;
         this.artists = artists;
     }
-
+    public Movie(){};
     public String getName() {
         return name;
     }

@@ -18,5 +18,6 @@ public class Main {
 //        Personality personality = JsonDealer.findPersonByName(personalities, "Джет Ли");
 //        personality.setName("Акакий Акакиевич");
         JsonDealer.saveAll(personalities);
+
     }
 }
