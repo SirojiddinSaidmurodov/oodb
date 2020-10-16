@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<moviePortal>
+    <movies/>
+    <name>КиноПоиск</name>
+    <users>
+        <user>
+            <name>Маша</name>
+            <passwordHash>klkwgualsbrg</passwordHash>
+            <eMail>masha@example.com</eMail>
+        </user>
+        <user>
+            <name>Алекс</name>
+            <passwordHash>asdad</passwordHash>
+            <eMail>mail@example.com</eMail>
+        </user>
+    </users>
+</moviePortal>
