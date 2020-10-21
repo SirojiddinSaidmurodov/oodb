@@ -4,7 +4,7 @@ CREATE TYPE Personality AS
 (
     name        varchar(40),
     dateOfBirth date,
-    bio         text
+    bio         varchar(200)
 );
 CREATE TABLE Actors
 (
