@@ -16,6 +16,7 @@ public class App {
         }
         assert connection != null;
         addData(connection);
+        showData(connection);
     }
 
     public static void addData(Connection connection) {
@@ -31,6 +32,24 @@ public class App {
             statement.executeUpdate();
         } catch (SQLException throwable) {
             throwable.printStackTrace();
+        }
+    }
+
+    public static void showData(Connection connection) {
+        PreparedStatement statement = null;
+        try {
+            statement = connection.prepareStatement(
+                    "Select (person).name, (person).dateofbirth, (person).bio, role from actors");
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                System.out.println(resultSet.getString(1) +
+                        ",\n    Дата рождения: " + resultSet.getDate(2) +
+                        ",\n    Биография: " + resultSet.getString(3) +
+                        ",\n    Роль в фильме: " + resultSet.getString(4) + "\n"
+                );
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
     }
 }
