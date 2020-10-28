@@ -1,4 +1,5 @@
-DROP TYPE if exists Personality cascade ;
+START TRANSACTION;
+DROP TYPE if exists Personality cascade;
 CREATE TYPE Personality as
 (
     "name"      varchar(50),
@@ -6,21 +7,21 @@ CREATE TYPE Personality as
     dateOfBirth date
 );
 
-DROP TYPE if exists Artist cascade ;
+DROP TYPE if exists Artist cascade;
 CREATE TYPE Artist as
 (
     person     Personality,
     occupation varchar(40)
 );
 
-DROP TYPE if exists Actor cascade ;
+DROP TYPE if exists Actor cascade;
 CREATE TYPE Actor as
 (
     person Personality,
     "role" varchar(40)
 );
 
-DROP TABLE if exists Movie cascade ;
+DROP TABLE if exists Movie cascade;
 CREATE TABLE Movie
 (
     id         SERIAL,
@@ -31,7 +32,7 @@ CREATE TABLE Movie
     PRIMARY KEY (id)
 );
 
-DROP TABLE if exists Rate cascade ;
+DROP TABLE if exists Rate cascade;
 CREATE TABLE Rate
 (
     id           SERIAL,
@@ -44,7 +45,7 @@ CREATE TABLE Rate
     FOREIGN KEY (userID) references "user" (id)
 );
 
-DROP TABLE if exists "user" cascade ;
+DROP TABLE if exists "user" cascade;
 CREATE TABLE "user"
 (
     id           SERIAL,
@@ -53,3 +54,4 @@ CREATE TABLE "user"
     email        varchar(200),
     PRIMARY KEY (id)
 );
+COMMIT;
