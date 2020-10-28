@@ -37,8 +37,8 @@ CREATE TYPE Rate as
     dateOfChange date
 );
 
-DROP TABLE if exists "User";
-CREATE TABLE "User"
+DROP TABLE if exists "user";
+CREATE TABLE "user"
 (
     name         varchar(40),
     passwordHash varchar(256),
