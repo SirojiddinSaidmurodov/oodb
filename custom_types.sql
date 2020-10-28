@@ -1,14 +1,47 @@
-DROP TABLE if exists Actors;
 DROP TYPE if exists Personality;
-CREATE TYPE Personality AS
+CREATE TYPE Personality as
 (
-    name        varchar(40),
-    dateOfBirth date,
-    bio         varchar(200)
+    "name"      varchar(50),
+    bio         varchar(250),
+    dateOfBirth date
 );
-CREATE TABLE Actors
+
+DROP TYPE if exists Artist;
+CREATE TYPE Artist as
 (
-    id     SERIAL,
+    person     Personality,
+    occupation varchar(40)
+);
+
+DROP TYPE if exists Actor;
+CREATE TYPE Actor as
+(
     person Personality,
-    role   char(40)
+    "role" varchar(40)
+);
+
+DROP TABLE if exists Movie;
+CREATE TABLE Movie
+(
+    "name"     varchar(250),
+    actors     Actor[],
+    rate       int,
+    ratesCount int
+);
+
+DROP TYPE if exists Rate;
+CREATE TYPE Rate as
+(
+    movie        int,
+    "value"      int,
+    dateOfChange date
+);
+
+DROP TABLE if exists "User";
+CREATE TABLE "User"
+(
+    name         varchar(40),
+    passwordHash varchar(256),
+    userRate     Rate[],
+    email        varchar(200)
 );
