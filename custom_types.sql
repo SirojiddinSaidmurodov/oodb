@@ -1,4 +1,4 @@
-DROP TYPE if exists Personality;
+DROP TYPE if exists Personality cascade ;
 CREATE TYPE Personality as
 (
     "name"      varchar(50),
@@ -6,42 +6,50 @@ CREATE TYPE Personality as
     dateOfBirth date
 );
 
-DROP TYPE if exists Artist;
+DROP TYPE if exists Artist cascade ;
 CREATE TYPE Artist as
 (
     person     Personality,
     occupation varchar(40)
 );
 
-DROP TYPE if exists Actor;
+DROP TYPE if exists Actor cascade ;
 CREATE TYPE Actor as
 (
     person Personality,
     "role" varchar(40)
 );
 
-DROP TABLE if exists Movie;
+DROP TABLE if exists Movie cascade ;
 CREATE TABLE Movie
 (
+    id         SERIAL,
     "name"     varchar(250),
     actors     Actor[],
     rate       int,
-    ratesCount int
+    ratesCount int,
+    PRIMARY KEY (id)
 );
 
-DROP TYPE if exists Rate;
-CREATE TYPE Rate as
+DROP TABLE if exists Rate cascade ;
+CREATE TABLE Rate
 (
-    movie        int,
+    id           SERIAL,
+    movie        bigint,
+    userID       bigint,
     "value"      int,
-    dateOfChange date
+    dateOfChange date,
+    PRIMARY KEY (id),
+    FOREIGN KEY (movie) references movie (id),
+    FOREIGN KEY (userID) references "user" (id)
 );
 
-DROP TABLE if exists "user";
+DROP TABLE if exists "user" cascade ;
 CREATE TABLE "user"
 (
+    id           SERIAL,
     name         varchar(40),
     passwordHash varchar(256),
-    userRate     Rate[],
-    email        varchar(200)
+    email        varchar(200),
+    PRIMARY KEY (id)
 );
