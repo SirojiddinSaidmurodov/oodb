@@ -3,7 +3,7 @@ DROP TYPE if exists Personality cascade;
 CREATE TYPE Personality as
 (
     "name"      varchar(50),
-    bio         varchar(250),
+    bio         varchar(500),
     dateOfBirth date
 );
 
@@ -24,11 +24,10 @@ CREATE TYPE Actor as
 DROP TABLE if exists Movie cascade;
 CREATE TABLE Movie
 (
-    id         SERIAL,
-    "name"     varchar(250),
-    actors     Actor[],
-    rate       int,
-    ratesCount int,
+    id      SERIAL,
+    "name"  varchar(250),
+    actors  Actor[],
+    artists Artist[],
     PRIMARY KEY (id)
 );
 
