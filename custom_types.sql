@@ -38,7 +38,7 @@ CREATE TABLE Rate
     movie        bigint,
     userID       bigint,
     "value"      int,
-    dateOfChange date,
+    dateOfChange date default CURRENT_DATE,
     PRIMARY KEY (id),
     FOREIGN KEY (movie) references movie (id),
     FOREIGN KEY (userID) references "user" (id)
