@@ -18,6 +18,9 @@ public class App {
         assert connection != null;
         addData(connection);
         showData(connection);
+        editData(connection);
+        System.out.println("\n\t\t======================= Data changed =============================\n");
+        showData(connection);
     }
 
     public static void showData(Connection connection) {
@@ -48,7 +51,7 @@ public class App {
             statementMovies.setInt(1, userID);
             ResultSet resultSet = statementMovies.executeQuery();
             while (resultSet.next()) {
-                result.add("    " + numToStars(resultSet.getInt(2)) + ", " + getMovie(connection,resultSet.getInt(1)) + ", " + resultSet.getDate(3));
+                result.add("    " + numToStars(resultSet.getInt(2)) + ", " + getMovie(connection, resultSet.getInt(1)) + ", " + resultSet.getDate(3));
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
@@ -152,6 +155,7 @@ public class App {
             statement.setDate(12, new Date(calendar.getTimeInMillis()));
             statement.setString(13, "Моника Фуэнтес");
 
+            //noinspection JpaQueryApiInspection
             statement.setString(14, "Джон Синглтон");
             statement.setString(15, "Джон Дэ́ниел Си́нглтон — американский кинорежиссёр, сценарист и кинопродюсер. Синглтон является самым молодым афроамериканцем в истории кинематографа, который был номинирован на «Оскар»");
             calendar.set(1968, Calendar.JANUARY, 6);
@@ -177,6 +181,20 @@ public class App {
     }
 
     public static void editData(Connection connection) {
-
+        try {
+            PreparedStatement statement = connection.prepareStatement("UPDATE movie SET actors[1] = row(row(?,?,?),?) where movie.id=1");
+            statement.setString(1, "Девон Аоки");
+            statement.setString(2, "Девон Эдвенна Аоки — американская актриса и модель. Девон Аоки — самая невысокая в мире супермодель. Свою дебютную роль в кино Девон исполнила в фильме «Смерть династии». Самая известная её работа — роль немой убийцы Михо в фильме Роберта Родригеса «Город грехов");
+            GregorianCalendar calendar = new GregorianCalendar();
+            calendar.set(1982, Calendar.AUGUST, 10);
+            statement.setDate(3, new Date(calendar.getTimeInMillis()));
+            statement.setString(4, "Суши");
+//            System.out.println("------------------------");
+//            System.out.println(statement.toString());
+//            System.out.println("------------------------");
+            statement.executeUpdate();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 }
