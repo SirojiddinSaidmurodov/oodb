@@ -1,4 +1,4 @@
-package jsonLoader;
+package JSONLoader;
 
 import MoviePortal.Personality;
 import com.google.gson.Gson;

@@ -1,7 +1,7 @@
 package JSONonDB;
 
 import MoviePortal.Personality;
-import jsonLoader.JsonDealer;
+import JSONLoader.JsonDealer;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
