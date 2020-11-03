@@ -6,7 +6,7 @@ Object oriented data bases course 2020
 3. [XML формат. XSD схема. Хранение и обработка объектов с использованием XML формата](src/main/java/XMLLoader)
 4. [JSON формат в СУБД PostgreSQL. Хранение и обработка объектов с использованием JSON формата](src/main/java/JSONonDB)
 5. [Пользовательские типы данных PostgreSQL](src/main/java/PGCustomTypes)
-6. Анализ объектной модели данных
+6. [Анализ объектной модели данных](src/main/java/ObjModelAnalysis)
 7. Принципы построения ORM
 8. Управляющие конструкции ORM
 9. Принципы проектирования объектно-ориентированной БД с использованием спецификации JPA
