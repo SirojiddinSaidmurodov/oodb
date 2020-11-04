@@ -1,6 +1,7 @@
 package ObjModelAnalysis;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +11,22 @@ public class App {
     public static final String PATH = "MoviePortal";
 
     public static void main(String[] args) {
+        System.out.println("\t\t-- == ===  Found classes  === == —-");
         List<Class<?>> classList = find();
+        for (Class<?> aClass : classList) {
+            System.out.println(aClass.getName());
+        }
+
+        System.out.println("\n\n\t\t-- == ===  Class fields  === == —-");
+        for (Class<?> aClass : classList) {
+            System.out.println("\n" + aClass.getName());
+            Field[] declaredFields = aClass.getDeclaredFields();
+            for (Field declaredField : declaredFields) {
+                System.out.println("\t" + declaredField.getName());
+            }
+        }
+
+
     }
 
     private static List<Class<?>> find() {
