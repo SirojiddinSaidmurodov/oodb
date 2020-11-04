@@ -1,10 +1,17 @@
 package MoviePortal;
 
+import ObjModelAnalysis.annotations.Column;
+import ObjModelAnalysis.annotations.Entity;
+
 import java.util.Date;
 
+@Entity
 public class Personality {
+    @Column
     private String name;
+    @Column
     private Date dateOfBirth;
+    @Column
     private String bio;
 
     public Personality(String name, Date dateOfBirth, String bio) {

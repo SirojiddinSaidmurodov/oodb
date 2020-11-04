@@ -1,5 +1,6 @@
 package ObjModelAnalysis;
 
+import ObjModelAnalysis.annotations.Column;
 import ObjModelAnalysis.annotations.Entity;
 
 import java.io.File;
@@ -47,7 +48,7 @@ public class App {
             System.out.println("\n" + RED + aClass.getName() + RESET);
             Method[] declaredMethods = aClass.getDeclaredMethods();
             for (Method method : declaredMethods) {
-                System.out.println("\t" + PURPLE + ITALIC + method.getName()+RESET);
+                System.out.println("\t" + PURPLE + ITALIC + method.getName() + RESET);
             }
         }
 
@@ -61,7 +62,20 @@ public class App {
             }
         }
 
-
+        System.out.println(CYAN + BOLD + "\n\n\t\t-- == ===  Attributes of entities  === == —-" + RESET);
+        for (Class<?> aClass : classList) {
+            if (aClass.isAnnotationPresent(Entity.class)) {
+                System.out.println("\n" + RED + aClass.getName() + RESET);
+                for (Field field : aClass.getDeclaredFields()) {
+                    for (Annotation a : field.getAnnotations()) {
+                        if (a.annotationType().equals(Column.class)) {
+                            System.out.println("\t" + BLUE + ITALIC + field.getName() + RESET +
+                                    " : " + YELLOW + field.getType().getName() + RESET);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private static List<Class<?>> find() {

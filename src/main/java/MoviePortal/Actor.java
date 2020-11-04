@@ -1,7 +1,15 @@
 package MoviePortal;
 
+import ObjModelAnalysis.annotations.Column;
+import ObjModelAnalysis.annotations.Entity;
+import ObjModelAnalysis.annotations.ManyToOne;
+
+@Entity
 public class Actor {
+    @Column
     private String role;
+    @Column
+    @ManyToOne
     private Personality person;
 
     public Actor(String role, Personality person) {

@@ -1,14 +1,25 @@
 package MoviePortal;
 
+import ObjModelAnalysis.annotations.*;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+@Entity
 public class Movie {
+    @Column
     private String name;
+    @Column
+    @ManyToOne
     private Set<Rate> rateSet;
+    @Column
     private Date releaseDate;
+    @Column
+    @OneToMany
     private List<Actor> actors;
+    @Column
+    @OneToMany
     private Set<Artist> artists;
 
     public Movie(String name, Set<Rate> rateSet, Date releaseDate, List<Actor> actors, Set<Artist> artists) {
@@ -18,7 +29,10 @@ public class Movie {
         this.actors = actors;
         this.artists = artists;
     }
-    public Movie(){};
+
+    public Movie() {
+    }
+
     public String getName() {
         return name;
     }

@@ -16,7 +16,9 @@ public class MoviePortal {
         this.users = users;
         this.movies = movies;
     }
-    public MoviePortal(){}
+
+    public MoviePortal() {
+    }
 
     public String getName() {
         return name;
@@ -25,6 +27,7 @@ public class MoviePortal {
     public void setName(String name) {
         this.name = name;
     }
+
     @XmlElementWrapper(name = "users")
     @XmlElement(name = "user")
     public List<User> getUsers() {
@@ -34,6 +37,7 @@ public class MoviePortal {
     public void setUsers(List<User> users) {
         this.users = users;
     }
+
     @XmlElementWrapper(name = "movies")
     @XmlElement(name = "movie")
     public List<Movie> getMovies() {

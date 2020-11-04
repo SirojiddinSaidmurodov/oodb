@@ -1,10 +1,19 @@
 package MoviePortal;
 
+import ObjModelAnalysis.annotations.Column;
+import ObjModelAnalysis.annotations.Entity;
+import ObjModelAnalysis.annotations.OneToMany;
+
 import java.util.List;
 
+@Entity
 public class User {
+    @Column
     private String name;
+    @Column
+    @OneToMany
     private List<Rate> userRate;
+    @Column
     private String eMail;
 
     private String passwordHash;
@@ -15,7 +24,10 @@ public class User {
         this.eMail = eMail;
         this.passwordHash = passwordHash;
     }
-    public User(){};
+
+    public User() {
+    }
+
     public String getName() {
         return name;
     }
