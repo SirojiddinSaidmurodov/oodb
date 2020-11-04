@@ -7,6 +7,6 @@ Object oriented data bases course 2020
 4. [JSON формат в СУБД PostgreSQL. Хранение и обработка объектов с использованием JSON формата](src/main/java/JSONonDB)
 5. [Пользовательские типы данных PostgreSQL](src/main/java/PGCustomTypes)
 6. [Анализ объектной модели данных](src/main/java/ObjModelAnalysis)
-7. Принципы построения ORM
+7. [Принципы построения ORM](src/main/java/ORMPrinciples)
 8. Управляющие конструкции ORM
 9. Принципы проектирования объектно-ориентированной БД с использованием спецификации JPA
