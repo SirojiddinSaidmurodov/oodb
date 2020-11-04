@@ -1,7 +1,11 @@
 package ObjModelAnalysis;
 
+import ObjModelAnalysis.annotations.Entity;
+
 import java.io.File;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,19 +14,50 @@ public class App {
     // java path to package for scanning
     public static final String PATH = "MoviePortal";
 
+    public static final String RESET = "\u001B[0m";
+    public static final String BLACK = "\u001B[30m";
+    public static final String RED = "\u001B[31m";
+    public static final String GREEN = "\u001B[32m";
+    public static final String YELLOW = "\u001B[33m";
+    public static final String BLUE = "\u001B[34m";
+    public static final String PURPLE = "\u001B[35m";
+    public static final String CYAN = "\u001B[36m";
+    public static final String WHITE = "\u001B[37m";
+    public static final String BOLD = "\u001B[01m";
+    public static final String ITALIC = "\u001B[03m";
+
     public static void main(String[] args) {
-        System.out.println("\t\t-- == ===  Found classes  === == —-");
+        System.out.println(CYAN + BOLD + "\t\t-- == ===  Found classes  === == —-\n" + RESET);
         List<Class<?>> classList = find();
         for (Class<?> aClass : classList) {
-            System.out.println(aClass.getName());
+            System.out.println(RED + aClass.getName() + RESET);
         }
 
-        System.out.println("\n\n\t\t-- == ===  Class fields  === == —-");
+        System.out.println(CYAN + BOLD + "\n\n\t\t-- == ===  Class fields  === == —-" + RESET);
         for (Class<?> aClass : classList) {
-            System.out.println("\n" + aClass.getName());
+            System.out.println("\n" + RED + aClass.getName() + RESET);
             Field[] declaredFields = aClass.getDeclaredFields();
             for (Field declaredField : declaredFields) {
-                System.out.println("\t" + declaredField.getName());
+                System.out.println("\t" + YELLOW + ITALIC + declaredField.getName() + RESET);
+            }
+        }
+
+        System.out.println(CYAN + BOLD + "\n\n\t\t-- == ===  Class methods  === == —-" + RESET);
+        for (Class<?> aClass : classList) {
+            System.out.println("\n" + RED + aClass.getName() + RESET);
+            Method[] declaredMethods = aClass.getDeclaredMethods();
+            for (Method method : declaredMethods) {
+                System.out.println("\t" + PURPLE + ITALIC + method.getName()+RESET);
+            }
+        }
+
+        System.out.println(CYAN + BOLD + "\n\n\t\t-- == ===  Entities  === == —-\n" + RESET);
+        for (Class<?> aClass : classList) {
+            Annotation[] annotations = aClass.getAnnotations();
+            for (Annotation annotation : annotations) {
+                if (annotation.annotationType().equals(Entity.class)) {
+                    System.out.println("\t" + YELLOW + ITALIC + aClass.getName() + RESET);
+                }
             }
         }
 
