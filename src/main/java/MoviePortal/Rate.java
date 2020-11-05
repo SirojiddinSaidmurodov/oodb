@@ -2,7 +2,7 @@ package MoviePortal;
 
 import ObjModelAnalysis.annotations.Column;
 import ObjModelAnalysis.annotations.Entity;
-import ObjModelAnalysis.annotations.OneToMany;
+import ObjModelAnalysis.annotations.OneToOne;
 
 import java.util.Date;
 
@@ -11,7 +11,7 @@ public class Rate {
     @Column
     private byte value;
     @Column
-    @OneToMany
+    @OneToOne
     private Movie movie;
     @Column
     private Date dateOfChange;
