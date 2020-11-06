@@ -84,16 +84,14 @@ public class App {
             }
         }
 
-        System.out.println(CYAN + BOLD + "\n\n\t\t-- == ===  Attributes of entities  === == —-" + RESET);
+        System.out.println(CYAN + BOLD + "\n\n\t\t-- == ===  GraphML  === == —-" + RESET);
         String graphXML = export(classList);
 
     }
 
     private static String export(List<Class<?>> classList) {
         GraphModel graphModel = new GraphModel();
-        for (Class<?> aClass : classList) {
-            graphModel.addEntity(aClass);
-        }
+        graphModel.fetchEntities(classList);
         return "";
     }
 

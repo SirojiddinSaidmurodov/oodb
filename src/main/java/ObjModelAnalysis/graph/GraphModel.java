@@ -1,5 +1,8 @@
 package ObjModelAnalysis.graph;
 
+import ObjModelAnalysis.annotations.Entity;
+
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,9 +16,21 @@ public class GraphModel {
         entityNodeList.add(new EntityNode(c));
     }
 
-    public void addEdge(Class<?> source, Class<?> target, ){
+    public void fetchEntities(List<Class<?>> classList) {
+        for (Class<?> aClass : classList) {
+            Annotation[] annotations = aClass.getAnnotations();
+            for (Annotation annotation : annotations) {
+                if (annotation.annotationType().equals(Entity.class)) {
+                    this.addEntity(aClass);
+                }
+            }
+        }
+    }
+
+    public void addEdge(Class<?> source, Class<?> target) {
 
     }
+
     public List<EntityNode> getEntityNodeList() {
         return entityNodeList;
     }
