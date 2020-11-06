@@ -38,7 +38,7 @@ public class GraphModel {
             for (Field field : entityNode.getEntityClass().getDeclaredFields()) {
                 if (field.getType().isAnnotationPresent(Entity.class)) {
                     for (Annotation declaredAnnotation : field.getDeclaredAnnotations()) {
-                        if(types.contains(declaredAnnotation.toString())){
+                        if(types.contains(declaredAnnotation.getClass().getName())){
                             addEdge(entityNode.getClass(),field.getClass(),declaredAnnotation);
                         }
                     }
@@ -71,5 +71,26 @@ public class GraphModel {
 
     public void setEdges(ArrayList<Edge> edges) {
         this.edges = edges;
+    }
+
+    @Override
+    public String toString() {
+//        return "GraphModel{" +
+//                "entityNodeList=" + entityNodeList +
+//                ", edges=" + edges +
+//                '}';
+        StringBuilder builder = new StringBuilder();
+        builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                " <graphml xmlns=\"http://graphml.graphdrawing.org/xmlns\"  \n" +
+                "     xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" +
+                "     xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns \n" +
+                "     http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd\">\n");
+        for (EntityNode entityNode : entityNodeList) {
+            builder.append(entityNode.toString()).append("\n");
+        }
+        for (Edge edge : edges) {
+            builder.append(edge.toString()).append("\n");
+        }
+        return builder.toString();
     }
 }

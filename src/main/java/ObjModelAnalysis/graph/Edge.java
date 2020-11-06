@@ -34,4 +34,13 @@ public class Edge {
     public void setRelationType(RelationType relationType) {
         this.relationType = relationType;
     }
+
+    @Override
+    public String toString() {
+        return "Edge{" +
+                "nodeSource=" + nodeSource +
+                ", nodeTarget=" + nodeTarget +
+                ", relationType=" + relationType +
+                '}';
+    }
 }

@@ -86,13 +86,14 @@ public class App {
 
         System.out.println(CYAN + BOLD + "\n\n\t\t-- == ===  GraphML  === == —-" + RESET);
         String graphXML = export(classList);
-
+        System.out.println(graphXML);
     }
 
     private static String export(List<Class<?>> classList) {
         GraphModel graphModel = new GraphModel();
         graphModel.fetchEntities(classList);
-        return "";
+        graphModel.fetchEdges();
+        return graphModel.toString();
     }
 
     private static List<Class<?>> find() {
