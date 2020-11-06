@@ -8,6 +8,7 @@ package ObjModelAnalysis;
 
 import ObjModelAnalysis.annotations.Column;
 import ObjModelAnalysis.annotations.Entity;
+import ObjModelAnalysis.graph.GraphModel;
 
 import java.io.File;
 import java.lang.annotation.Annotation;
@@ -82,6 +83,18 @@ public class App {
                 }
             }
         }
+
+        System.out.println(CYAN + BOLD + "\n\n\t\t-- == ===  Attributes of entities  === == —-" + RESET);
+        String graphXML = export(classList);
+
+    }
+
+    private static String export(List<Class<?>> classList) {
+        GraphModel graphModel = new GraphModel();
+        for (Class<?> aClass : classList) {
+            graphModel.addEntity(aClass);
+        }
+        return "";
     }
 
     private static List<Class<?>> find() {
