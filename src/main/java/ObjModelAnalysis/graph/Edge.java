@@ -5,6 +5,12 @@ public class Edge {
     private EntityNode nodeTarget;
     private RelationType relationType;
 
+    public Edge(EntityNode nodeSource, EntityNode nodeTarget, RelationType relationType) {
+        this.nodeSource = nodeSource;
+        this.nodeTarget = nodeTarget;
+        this.relationType = relationType;
+    }
+
     public EntityNode getNodeSource() {
         return nodeSource;
     }
