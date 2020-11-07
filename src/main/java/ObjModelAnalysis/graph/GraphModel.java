@@ -32,7 +32,7 @@ public class GraphModel {
     public EntityNode getEntity(Class<?> aClass){
         for (EntityNode entity:
              entityNodeList) {
-            if(entity.getClass().equals(aClass)){
+            if(entity.getEntityClass().getSimpleName().equals(aClass.getSimpleName())){
                 return entity;
             }
         }
@@ -49,7 +49,7 @@ public class GraphModel {
                 if (field.getType().isAnnotationPresent(Entity.class)) {
                     for (Annotation declaredAnnotation : field.getAnnotations()) {
                         if(types.contains(declaredAnnotation.annotationType().getSimpleName())){
-                            addEdge(entityNode,getEntity(field.getClass()),declaredAnnotation);
+                            addEdge(entityNode,getEntity(field.getType()),declaredAnnotation);
                         }
                     }
                 }
