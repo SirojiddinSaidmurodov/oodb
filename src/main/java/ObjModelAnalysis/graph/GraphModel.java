@@ -29,6 +29,16 @@ public class GraphModel {
         }
     }
 
+    public EntityNode getEntity(Class<?> aClass){
+        for (EntityNode entity:
+             entityNodeList) {
+            if(entity.getClass().equals(aClass)){
+                return entity;
+            }
+        }
+        return null;
+    }
+
     public void fetchEdges() {
         ArrayList<String> types = new ArrayList<>();
         Arrays.stream(RelationType.values()).forEach(type -> {
@@ -37,24 +47,19 @@ public class GraphModel {
         for (EntityNode entityNode : entityNodeList) {
             for (Field field : entityNode.getEntityClass().getDeclaredFields()) {
                 if (field.getType().isAnnotationPresent(Entity.class)) {
-                    for (Annotation declaredAnnotation : field.getDeclaredAnnotations()) {
-                        if(types.contains(declaredAnnotation.getClass().getName())){
-                            addEdge(entityNode.getClass(),field.getClass(),declaredAnnotation);
+                    for (Annotation declaredAnnotation : field.getAnnotations()) {
+                        if(types.contains(declaredAnnotation.annotationType().getSimpleName())){
+                            addEdge(entityNode,getEntity(field.getClass()),declaredAnnotation);
                         }
                     }
-
                 }
             }
         }
     }
 
-    public void addEdge(Class<?> source, Class<?> target, Annotation annotation) {
-        EntityNode sourceNode = entityNodeList.stream().filter(entityNode -> entityNode.getEntityClass().equals(source)).findAny().orElse(null);
-        EntityNode targetNode = entityNodeList.stream().filter(entityNode -> entityNode.getEntityClass().equals(target)).findAny().orElse(null);
-        RelationType type = Arrays.stream(RelationType.values()).filter(type1 -> type1.name().equals(annotation.getClass().getName())).findAny().orElse(null);
-        if (type != null && sourceNode != null && targetNode != null) {
-            edges.add(new Edge(sourceNode, targetNode, type));
-        }
+    public void addEdge(EntityNode source, EntityNode target, Annotation annotation) {
+
+        edges.add(new Edge(source, target, RelationType.valueOf(annotation.annotationType().getSimpleName())));
     }
 
     public List<EntityNode> getEntityNodeList() {
@@ -81,16 +86,19 @@ public class GraphModel {
 //                '}';
         StringBuilder builder = new StringBuilder();
         builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                " <graphml xmlns=\"http://graphml.graphdrawing.org/xmlns\"  \n" +
-                "     xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" +
-                "     xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns \n" +
-                "     http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd\">\n");
+                "<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns\"  \n" +
+                "\txmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" +
+                "\txsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns \n" +
+                "\thttp://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd\">\n"+
+                "\t<graph id=\"G\" edgedefault=\"undirected\">\n");
         for (EntityNode entityNode : entityNodeList) {
-            builder.append(entityNode.toString()).append("\n");
+            builder.append("\t\t").append(entityNode.toString()).append("\n");
         }
         for (Edge edge : edges) {
-            builder.append(edge.toString()).append("\n");
+            builder.append("\t\t").append(edge.toString()).append("\n");
         }
+        builder.append("\t</graph>\n" +
+                "</graphml>");
         return builder.toString();
     }
 }
