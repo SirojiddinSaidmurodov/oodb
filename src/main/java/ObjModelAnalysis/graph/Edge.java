@@ -37,10 +37,6 @@ public class Edge {
 
     @Override
     public String toString() {
-        return "Edge{" +
-                "nodeSource=" + nodeSource +
-                ", nodeTarget=" + nodeTarget +
-                ", relationType=" + relationType +
-                '}';
+        return "<edge id=\""+ nodeSource.getEntityName()+nodeTarget.getEntityName()+"\" directed=\"true\" source=\""+nodeSource.getEntityName()+"\" target=\""+nodeTarget.getEntityName()+"\"/>";
     }
 }

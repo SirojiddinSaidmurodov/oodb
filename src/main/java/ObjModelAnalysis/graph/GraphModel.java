@@ -29,10 +29,10 @@ public class GraphModel {
         }
     }
 
-    public EntityNode getEntity(Class<?> aClass){
-        for (EntityNode entity:
-             entityNodeList) {
-            if(entity.getEntityClass().getSimpleName().equals(aClass.getSimpleName())){
+    public EntityNode getEntity(Class<?> aClass) {
+        for (EntityNode entity :
+                entityNodeList) {
+            if (entity.getEntityClass().getSimpleName().equals(aClass.getSimpleName())) {
                 return entity;
             }
         }
@@ -48,8 +48,8 @@ public class GraphModel {
             for (Field field : entityNode.getEntityClass().getDeclaredFields()) {
                 if (field.getType().isAnnotationPresent(Entity.class)) {
                     for (Annotation declaredAnnotation : field.getAnnotations()) {
-                        if(types.contains(declaredAnnotation.annotationType().getSimpleName())){
-                            addEdge(entityNode,getEntity(field.getType()),declaredAnnotation);
+                        if (types.contains(declaredAnnotation.annotationType().getSimpleName())) {
+                            addEdge(entityNode, getEntity(field.getType()), declaredAnnotation);
                         }
                     }
                 }
@@ -89,7 +89,7 @@ public class GraphModel {
                 "<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns\"  \n" +
                 "\txmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" +
                 "\txsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns \n" +
-                "\thttp://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd\">\n"+
+                "\thttp://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd\">\n" +
                 "\t<graph id=\"G\" edgedefault=\"undirected\">\n");
         for (EntityNode entityNode : entityNodeList) {
             builder.append("\t\t").append(entityNode.toString()).append("\n");
