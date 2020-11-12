@@ -10,7 +10,10 @@ import ObjModelAnalysis.annotations.Column;
 import ObjModelAnalysis.annotations.Entity;
 import ObjModelAnalysis.graph.GraphModel;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -87,6 +90,13 @@ public class App {
         System.out.println(CYAN + BOLD + "\n\n\t\t-- == ===  GraphML  === == —-" + RESET);
         String graphXML = export(classList);
         System.out.println(graphXML);
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(new File("out.graphml")));
+            writer.write(graphXML);
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private static String export(List<Class<?>> classList) {
