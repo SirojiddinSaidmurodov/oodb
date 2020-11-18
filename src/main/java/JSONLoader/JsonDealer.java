@@ -1,10 +1,19 @@
+/*
+ * Copyright (c) 2020. Saidmurodov Sirojiddin
+ * siroj.serj15@outlook.com
+ * All rights reserved.
+ */
+
 package JSONLoader;
 
 import MoviePortal.Personality;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Arrays;
@@ -12,6 +21,7 @@ import java.util.List;
 
 public class JsonDealer {
     static Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
+
     public static List<Personality> loadPersonality() {
         File jsonfile = new File("persons.json");
         String jsonStr = "";
@@ -27,9 +37,9 @@ public class JsonDealer {
         return Arrays.asList(personalities);
     }
 
-    public static void saveAll(List<Personality> personalities){
-        if (personalities != null && personalities.size()>0){
-            String personsJSON =gson.toJson(personalities);
+    public static void saveAll(List<Personality> personalities) {
+        if (personalities != null && personalities.size() > 0) {
+            String personsJSON = gson.toJson(personalities);
             System.out.println(personsJSON);
             try (OutputStream stream = new FileOutputStream(new File("persons.json"))) {
                 stream.write(personsJSON.getBytes(StandardCharsets.UTF_8));

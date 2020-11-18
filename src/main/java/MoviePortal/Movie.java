@@ -1,6 +1,15 @@
+/*
+ * Copyright (c) 2020. Saidmurodov Sirojiddin
+ * siroj.serj15@outlook.com
+ * All rights reserved.
+ */
+
 package MoviePortal;
 
-import ObjModelAnalysis.annotations.*;
+import ObjModelAnalysis.annotations.Column;
+import ObjModelAnalysis.annotations.Entity;
+import ObjModelAnalysis.annotations.ManyToOne;
+import ObjModelAnalysis.annotations.OneToMany;
 
 import java.util.Date;
 import java.util.List;

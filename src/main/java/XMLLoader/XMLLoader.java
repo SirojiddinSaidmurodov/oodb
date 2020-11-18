@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2020. Saidmurodov Sirojiddin
+ * siroj.serj15@outlook.com
+ * All rights reserved.
+ */
+
 package XMLLoader;
 
 import MoviePortal.Movie;
@@ -36,7 +42,7 @@ public class XMLLoader {
         System.out.println(unmarshalled);
         System.out.println("\n\n" + sorted);
 
-        System.out.println("\n\n" +findByName(sorted, "Маша"));
+        System.out.println("\n\n" + findByName(sorted, "Маша"));
     }
 
     public static void save(MoviePortal portal) {
