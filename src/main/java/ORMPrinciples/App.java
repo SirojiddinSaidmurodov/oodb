@@ -11,35 +11,24 @@ import ObjModelAnalysis.annotations.Entity;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 import static ObjModelAnalysis.App.find;
 
 public class App {
 
     public static void main(String[] args) {
-
-        System.out.println(is_entities_present_on_table());
-    }
-
-    public static boolean is_entities_present_on_table() {
         ArrayList<String> tables = new ArrayList<>();
+        Connection connection = null;
         try {
             Class.forName("org.postgresql.Driver");
             String dbURL = "jdbc:postgresql://localhost:5432/OODB";
-            Connection connection = DriverManager.getConnection(dbURL, "postgres", "131214");
-            PreparedStatement statement = connection.prepareStatement(
-                    "SELECT table_name " +
-                            "FROM information_schema.tables " +
-                            "WHERE table_type = 'BASE TABLE' AND " +
-                            "table_schema NOT IN ('pg_catalog', 'information_schema')" +
-                            "ORDER BY table_name");
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                tables.add(resultSet.getString("table_name"));
-            }
+            connection = DriverManager.getConnection(dbURL, "postgres", "131214");
+            tables = getTables(connection);
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
+
         ArrayList<String> classNames = new ArrayList<>();
         for (Class<?> c :
                 find()) {
@@ -50,14 +39,71 @@ public class App {
         System.out.println(classNames);
         System.out.println(tables);
         if (classNames.size() != tables.size()) {
-            return false;
+            System.out.println("Amount of tables and entities is not equal");
         } else {
             for (int i = 0; i < tables.size(); i++) {
                 if (!classNames.get(i).toLowerCase().equals(tables.get(i))) {
-                    return false;
+                    System.out.println("Table is not present");
                 }
             }
-            return true;
+            System.out.println("That's alright!");
         }
+        List<String> fields = null;
+        for (String table :
+                tables) {
+            if (connection != null) {
+                try {
+                    fields = getFields(connection, table);
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+                System.out.println(table);
+                System.out.println("--------------------");
+                System.out.println(fields);
+                System.out.println("\n\n");
+            }
+        }
+    }
+
+    public static ArrayList<String> getTables(Connection connection) {
+        ArrayList<String> tables = new ArrayList<>();
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    "SELECT table_name " +
+                            "FROM information_schema.tables " +
+                            "WHERE table_type = 'BASE TABLE' AND " +
+                            "table_schema NOT IN ('pg_catalog', 'information_schema')" +
+                            "ORDER BY table_name");
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                tables.add(resultSet.getString("table_name"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return tables;
+    }
+
+    public static List<String> getFields(Connection connection, String tableName) throws SQLException {
+
+        List<String> lst = new ArrayList<>();
+
+        PreparedStatement st = connection.prepareStatement(
+                "SELECT a.attname " +
+                        "FROM pg_catalog.pg_attribute a " +
+                        "WHERE a.attrelid = (SELECT c.oid FROM pg_catalog.pg_class c " +
+                        "LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace " +
+                        " WHERE pg_catalog.pg_table_is_visible(c.oid) AND c.relname = ? )" +
+                        " AND a.attnum > 0 AND NOT a.attisdropped");
+
+        st.setString(1, tableName);
+        ResultSet resultSet = st.executeQuery();
+
+        while (resultSet.next()) {
+            String s = resultSet.getString("attname");
+            lst.add(s);
+        }
+        st.close();
+        return lst;
     }
 }
