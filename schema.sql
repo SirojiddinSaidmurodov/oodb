@@ -63,6 +63,7 @@ CREATE TABLE "user"
     id    SERIAL,
     name  char(255),
     eMail char(25),
+    passwordHash char(50),
     PRIMARY KEY (id)
 );
 
