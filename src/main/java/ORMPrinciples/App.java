@@ -9,8 +9,10 @@ package ORMPrinciples;
 
 import ObjModelAnalysis.annotations.Entity;
 
+import java.lang.reflect.Field;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static ObjModelAnalysis.App.find;
@@ -30,10 +32,12 @@ public class App {
         }
 
         ArrayList<String> classNames = new ArrayList<>();
+        List<Class<?>> classList = new ArrayList<>();
         for (Class<?> c :
                 find()) {
             if (c.isAnnotationPresent(Entity.class)) {
                 classNames.add(c.getSimpleName());
+                classList.add(c);
             }
         }
         System.out.println(classNames);
@@ -49,18 +53,21 @@ public class App {
             System.out.println("That's alright!");
         }
         List<String> fields = null;
-        for (String table :
-                tables) {
+        for (int i = 0, tablesSize = tables.size(); i < tablesSize; i++) {
+            String table = tables.get(i);
+            Class<?> aClass = classList.get(i);
             if (connection != null) {
                 try {
                     fields = getFields(connection, table);
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }
-                System.out.println(table);
+                System.out.println(table + "  " + aClass.getSimpleName());
                 System.out.println("--------------------");
                 System.out.println(fields);
+                System.out.println(Arrays.toString(Arrays.stream(aClass.getDeclaredFields()).map(Field::getName).toArray()));
                 System.out.println("\n\n");
+
             }
         }
     }
