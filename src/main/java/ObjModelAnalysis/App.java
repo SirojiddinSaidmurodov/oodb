@@ -106,7 +106,7 @@ public class App {
         return graphModel.toString();
     }
 
-    private static List<Class<?>> find() {
+    public static List<Class<?>> find() {
         String scannedPath = App.PATH.replace(".", "/");
         URL scannedUrl = Thread.currentThread().getContextClassLoader().getResource(scannedPath);
         if (scannedUrl == null) {
