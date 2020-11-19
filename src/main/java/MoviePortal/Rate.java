@@ -14,6 +14,7 @@ import java.util.Date;
 
 @Entity
 public class Rate {
+    private long id;
     @Column
     private byte value;
     @Column

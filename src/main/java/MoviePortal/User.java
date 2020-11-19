@@ -14,6 +14,7 @@ import java.util.List;
 
 @Entity
 public class User {
+    private long id;
     @Column
     private String name;
     @Column

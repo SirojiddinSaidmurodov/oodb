@@ -13,6 +13,7 @@ import java.util.Date;
 
 @Entity
 public class Personality {
+    private long id;
     @Column
     private String name;
     @Column

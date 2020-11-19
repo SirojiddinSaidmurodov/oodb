@@ -12,6 +12,7 @@ import ObjModelAnalysis.annotations.ManyToOne;
 
 @Entity
 public class Actor {
+    private long id;
     @Column
     private String role;
     @Column

@@ -13,6 +13,7 @@ import java.util.List;
 
 @XmlRootElement(name = "moviePortal")
 public class MoviePortal {
+    private long id;
     private String name;
     private List<User> users;
     private List<Movie> movies;

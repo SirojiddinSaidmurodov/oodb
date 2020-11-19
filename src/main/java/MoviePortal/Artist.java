@@ -12,6 +12,7 @@ import ObjModelAnalysis.annotations.ManyToOne;
 
 @Entity
 public class Artist {
+    private long id;
     @Column
     @ManyToOne
     private Personality person;

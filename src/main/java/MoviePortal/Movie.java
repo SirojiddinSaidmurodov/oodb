@@ -17,6 +17,7 @@ import java.util.Set;
 
 @Entity
 public class Movie {
+    private long id;
     @Column
     private String name;
     @Column
