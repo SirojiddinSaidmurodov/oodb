@@ -57,8 +57,8 @@ CREATE TABLE artist
         ON DELETE CASCADE
 );
 
-DROP TABLE IF EXISTS usr CASCADE;
-CREATE TABLE usr
+DROP TABLE IF EXISTS "user" CASCADE;
+CREATE TABLE "user"
 (
     id    SERIAL,
     name  char(255),
@@ -78,7 +78,7 @@ CREATE TABLE rate
     FOREIGN KEY (movie_id) REFERENCES movie (id)
         ON UPDATE CASCADE
         ON DELETE CASCADE,
-    FOREIGN KEY (usr_id) REFERENCES usr (id)
+    FOREIGN KEY (usr_id) REFERENCES "user" (id)
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );
