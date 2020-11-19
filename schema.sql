@@ -6,7 +6,16 @@
 -- Schema built according model in MoviePortal package
 
 
-DROP TABLE IF EXISTS personality;
+DROP TABLE IF EXISTS movie CASCADE;
+CREATE TABLE movie
+(
+    id          SERIAL,
+    name        char(255),
+    releaseDate date,
+    PRIMARY KEY (id)
+);
+
+DROP TABLE IF EXISTS personality CASCADE;
 CREATE TABLE personality
 (
     id          SERIAL,
@@ -16,7 +25,7 @@ CREATE TABLE personality
     PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS actor;
+DROP TABLE IF EXISTS actor CASCADE;
 CREATE TABLE actor
 (
     id        SERIAL,
@@ -32,7 +41,7 @@ CREATE TABLE actor
         ON DELETE CASCADE
 );
 
-DROP TABLE IF EXISTS artist;
+DROP TABLE IF EXISTS artist CASCADE;
 CREATE TABLE artist
 (
     id         SERIAL,
@@ -48,16 +57,7 @@ CREATE TABLE artist
         ON DELETE CASCADE
 );
 
-DROP TABLE IF EXISTS movie;
-CREATE TABLE movie
-(
-    id          SERIAL,
-    name        char(255),
-    releaseDate date,
-    PRIMARY KEY (id)
-);
-
-DROP TABLE IF EXISTS usr;
+DROP TABLE IF EXISTS usr CASCADE;
 CREATE TABLE usr
 (
     id    SERIAL,
@@ -66,7 +66,7 @@ CREATE TABLE usr
     PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS rate;
+DROP TABLE IF EXISTS rate CASCADE;
 CREATE TABLE rate
 (
     id           SERIAL,
