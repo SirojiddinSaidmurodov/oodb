@@ -1,4 +1,4 @@
-# OODB
+# Object databases
 Object oriented data bases course 2020
 #### Темы:
 1. [Разработка объектно-ориентированной модели данных прикладной задачи](src/main/java/MoviePortal)
@@ -8,5 +8,7 @@ Object oriented data bases course 2020
 5. [Пользовательские типы данных PostgreSQL](src/main/java/PGCustomTypes)
 6. [Анализ объектной модели данных](src/main/java/ObjModelAnalysis)
 7. [Принципы построения ORM](src/main/java/ORMPrinciples)
-8. Управляющие конструкции ORM
+8. [Управляющие конструкции ORM](src/main/java/ORMManagement)
 9. Принципы проектирования объектно-ориентированной БД с использованием спецификации JPA
+
+[ООБД wiki](https://en.wikipedia.org/wiki/Object_database)
