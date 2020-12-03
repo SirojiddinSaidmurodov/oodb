@@ -8,12 +8,14 @@ package MoviePortal;
 
 import ObjModelAnalysis.annotations.Column;
 import ObjModelAnalysis.annotations.Entity;
+import ObjModelAnalysis.annotations.Id;
 import ObjModelAnalysis.annotations.OneToMany;
 
 import java.util.List;
 
 @Entity
 public class User {
+    @Id
     private long id;
     @Column
     private String name;

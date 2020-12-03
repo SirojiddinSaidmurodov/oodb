@@ -8,10 +8,12 @@ package MoviePortal;
 
 import ObjModelAnalysis.annotations.Column;
 import ObjModelAnalysis.annotations.Entity;
+import ObjModelAnalysis.annotations.Id;
 import ObjModelAnalysis.annotations.ManyToOne;
 
 @Entity
 public class Actor {
+    @Id
     private long id;
     @Column
     private String role;

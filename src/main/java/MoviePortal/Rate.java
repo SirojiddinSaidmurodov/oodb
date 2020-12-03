@@ -8,12 +8,14 @@ package MoviePortal;
 
 import ObjModelAnalysis.annotations.Column;
 import ObjModelAnalysis.annotations.Entity;
+import ObjModelAnalysis.annotations.Id;
 import ObjModelAnalysis.annotations.OneToOne;
 
 import java.util.Date;
 
 @Entity
 public class Rate {
+    @Id
     private long id;
     @Column
     private byte value;

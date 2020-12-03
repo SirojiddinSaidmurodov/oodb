@@ -6,10 +6,7 @@
 
 package MoviePortal;
 
-import ObjModelAnalysis.annotations.Column;
-import ObjModelAnalysis.annotations.Entity;
-import ObjModelAnalysis.annotations.ManyToOne;
-import ObjModelAnalysis.annotations.OneToMany;
+import ObjModelAnalysis.annotations.*;
 
 import java.util.Date;
 import java.util.List;
@@ -17,6 +14,7 @@ import java.util.Set;
 
 @Entity
 public class Movie {
+    @Id
     private long id;
     @Column
     private String name;
