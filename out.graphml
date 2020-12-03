@@ -7,11 +7,10 @@
 		<node id="MoviePortal.Actor"/>
 		<node id="MoviePortal.Artist"/>
 		<node id="MoviePortal.Movie"/>
-		<node id="MoviePortal.Personality"/>
+		<node id="MoviePortal.Person"/>
 		<node id="MoviePortal.Rate"/>
 		<node id="MoviePortal.User"/>
-		<edge id="MoviePortal.ActorMoviePortal.Personality" directed="true" source="MoviePortal.Actor" target="MoviePortal.Personality"/>
-		<edge id="MoviePortal.ArtistMoviePortal.Personality" directed="true" source="MoviePortal.Artist" target="MoviePortal.Personality"/>
-		<edge id="MoviePortal.RateMoviePortal.Movie" directed="true" source="MoviePortal.Rate" target="MoviePortal.Movie"/>
+		<edge id="MoviePortal.ActorMoviePortal.Personality" directed="true" source="MoviePortal.Actor" target="MoviePortal.Person"/>
+		<edge id="MoviePortal.ArtistMoviePortal.Personality" directed="true" source="MoviePortal.Artist" target="MoviePortal.Person"/>
 	</graph>
 </graphml>

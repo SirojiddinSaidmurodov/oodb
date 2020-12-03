@@ -13,7 +13,7 @@ import ObjModelAnalysis.annotations.Id;
 import java.util.Date;
 
 @Entity
-public class Personality {
+public class Person {
     @Id
     private long id;
     @Column
@@ -23,7 +23,7 @@ public class Personality {
     @Column
     private String bio;
 
-    public Personality(String name, Date dateOfBirth, String bio) {
+    public Person(String name, Date dateOfBirth, String bio) {
         this.name = name;
         this.dateOfBirth = dateOfBirth;
         this.bio = bio;

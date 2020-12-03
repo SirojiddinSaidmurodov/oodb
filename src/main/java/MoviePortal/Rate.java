@@ -9,7 +9,6 @@ package MoviePortal;
 import ObjModelAnalysis.annotations.Column;
 import ObjModelAnalysis.annotations.Entity;
 import ObjModelAnalysis.annotations.Id;
-import ObjModelAnalysis.annotations.OneToOne;
 
 import java.util.Date;
 
@@ -20,14 +19,10 @@ public class Rate {
     @Column
     private byte value;
     @Column
-    @OneToOne
-    private Movie movie;
-    @Column
     private Date dateOfChange;
 
-    public Rate(byte value, Movie movie, Date dateOfChange) {
+    public Rate(byte value, Date dateOfChange) {
         this.value = value;
-        this.movie = movie;
         this.dateOfChange = dateOfChange;
     }
 
@@ -37,14 +32,6 @@ public class Rate {
 
     public void setValue(byte value) {
         this.value = value;
-    }
-
-    public Movie getMovie() {
-        return movie;
-    }
-
-    public void setMovie(Movie movie) {
-        this.movie = movie;
     }
 
     public Date getDateOfChange() {
@@ -59,7 +46,6 @@ public class Rate {
     public String toString() {
         return "Rate{" +
                 "value=" + value +
-                ", movie=" + movie +
                 ", dateOfChange=" + dateOfChange +
                 '}';
     }

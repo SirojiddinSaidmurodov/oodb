@@ -6,7 +6,7 @@
 
 package JSONLoader;
 
-import MoviePortal.Personality;
+import MoviePortal.Person;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -22,7 +22,7 @@ import java.util.List;
 public class JsonDealer {
     static Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
 
-    public static List<Personality> loadPersonality() {
+    public static List<Person> loadPersonality() {
         File jsonfile = new File("persons.json");
         String jsonStr = "";
         if (jsonfile.exists()) {
@@ -33,11 +33,11 @@ public class JsonDealer {
             }
         }
 
-        Personality[] personalities = gson.fromJson(jsonStr, Personality[].class);
+        Person[] personalities = gson.fromJson(jsonStr, Person[].class);
         return Arrays.asList(personalities);
     }
 
-    public static void saveAll(List<Personality> personalities) {
+    public static void saveAll(List<Person> personalities) {
         if (personalities != null && personalities.size() > 0) {
             String personsJSON = gson.toJson(personalities);
             System.out.println(personsJSON);
@@ -50,10 +50,10 @@ public class JsonDealer {
         }
     }
 
-    public static Personality findPersonByName(List<Personality> persons, String searchName) {
-        Personality result = null;
+    public static Person findPersonByName(List<Person> persons, String searchName) {
+        Person result = null;
 
-        for (Personality person : persons) {
+        for (Person person : persons) {
             if (person.getName().equals(searchName)) {
                 result = person;
             }

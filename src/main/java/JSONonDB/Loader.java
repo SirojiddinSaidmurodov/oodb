@@ -6,7 +6,7 @@
 
 package JSONonDB;
 
-import MoviePortal.Personality;
+import MoviePortal.Person;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Loader {
-    public static List<Personality> load(Connection connection) {
+    public static List<Person> load(Connection connection) {
         String pgstr = "";
         try {
             PreparedStatement statement = connection.prepareStatement("SELECT content from personb");
@@ -29,7 +29,7 @@ public class Loader {
             }
             statement.close();
             Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
-            Personality[] personalities = gson.fromJson(pgstr, Personality[].class);
+            Person[] personalities = gson.fromJson(pgstr, Person[].class);
             statement = connection.prepareStatement("SELECT content->0 as c from personb");
 
             result = statement.executeQuery();
@@ -45,7 +45,7 @@ public class Loader {
         return null;
     }
 
-    public static void save(List<Personality> personalities, Connection connection) {
+    public static void save(List<Person> personalities, Connection connection) {
 
         try {
             Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();
@@ -64,7 +64,7 @@ public class Loader {
         }
     }
 
-    public static void saveb(List<Personality> personalities, Connection connection) {
+    public static void saveb(List<Person> personalities, Connection connection) {
 
         try {
             Gson gson = new GsonBuilder().setDateFormat("dd.MM.yyyy").create();

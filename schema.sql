@@ -15,8 +15,8 @@ CREATE TABLE movie
     PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS personality CASCADE;
-CREATE TABLE personality
+DROP TABLE IF EXISTS person CASCADE;
+CREATE TABLE person
 (
     id          SERIAL,
     "name"      char(100),
@@ -33,7 +33,7 @@ CREATE TABLE actor
     person_id BIGINT,
     movie_id  BIGINT,
     PRIMARY KEY (id),
-    FOREIGN KEY (person_id) REFERENCES personality (id)
+    FOREIGN KEY (person_id) REFERENCES person (id)
         ON UPDATE CASCADE
         ON DELETE CASCADE,
     FOREIGN KEY (movie_id) REFERENCES movie (id)
@@ -49,7 +49,7 @@ CREATE TABLE artist
     person_id  BIGINT,
     movie_id   BIGINT,
     PRIMARY KEY (id),
-    FOREIGN KEY (person_id) REFERENCES personality (id)
+    FOREIGN KEY (person_id) REFERENCES person (id)
         ON UPDATE CASCADE
         ON DELETE CASCADE,
     FOREIGN KEY (movie_id) REFERENCES movie (id)
@@ -74,12 +74,12 @@ CREATE TABLE rate
     value        integer,
     movie_id     bigint,
     dateOfChange date,
-    usr_id       bigint,
+    user_id       bigint,
     PRIMARY KEY (id),
     FOREIGN KEY (movie_id) REFERENCES movie (id)
         ON UPDATE CASCADE
         ON DELETE CASCADE,
-    FOREIGN KEY (usr_id) REFERENCES "user" (id)
+    FOREIGN KEY (user_id) REFERENCES "user" (id)
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );

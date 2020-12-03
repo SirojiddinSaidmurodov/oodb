@@ -17,20 +17,20 @@ public class Artist {
     private long id;
     @Column
     @ManyToOne
-    private Personality person;
+    private Person person;
     @Column
     private String occupation;
 
-    public Artist(Personality person, String occupation) {
+    public Artist(Person person, String occupation) {
         this.person = person;
         this.occupation = occupation;
     }
 
-    public Personality getPerson() {
+    public Person getPerson() {
         return person;
     }
 
-    public void setPerson(Personality person) {
+    public void setPerson(Person person) {
         this.person = person;
     }
 

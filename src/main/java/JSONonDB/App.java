@@ -7,7 +7,7 @@
 package JSONonDB;
 
 import JSONLoader.JsonDealer;
-import MoviePortal.Personality;
+import MoviePortal.Person;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -22,12 +22,12 @@ public class App {
             String dbURL = "jdbc:postgresql://localhost:5432/OODB";
             Connection connection = DriverManager.getConnection(dbURL, "postgres", "131214");
 
-            List<Personality> personalities = Loader.load(connection);
-            List<Personality> personalities_from_file = JsonDealer.loadPersonality();
+            List<Person> personalities = Loader.load(connection);
+            List<Person> personalities_from_file = JsonDealer.loadPersonality();
 
             System.out.println("Database:\n");
             if (personalities != null) {
-                personalities.sort(Comparator.comparing(Personality::getName));
+                personalities.sort(Comparator.comparing(Person::getName));
                 personalities.forEach(System.out::println);
                 JsonDealer.findPersonByName(personalities, "Акакий Акакиевич");
             }

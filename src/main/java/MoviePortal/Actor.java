@@ -19,9 +19,9 @@ public class Actor {
     private String role;
     @Column
     @ManyToOne
-    private Personality person;
+    private Person person;
 
-    public Actor(String role, Personality person) {
+    public Actor(String role, Person person) {
         this.role = role;
         this.person = person;
     }
@@ -34,11 +34,11 @@ public class Actor {
         this.role = role;
     }
 
-    public Personality getPerson() {
+    public Person getPerson() {
         return person;
     }
 
-    public void setPerson(Personality person) {
+    public void setPerson(Person person) {
         this.person = person;
     }
 

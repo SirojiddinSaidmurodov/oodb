@@ -6,11 +6,13 @@
 
 package MoviePortal;
 
-import ObjModelAnalysis.annotations.*;
+import ObjModelAnalysis.annotations.Column;
+import ObjModelAnalysis.annotations.Entity;
+import ObjModelAnalysis.annotations.Id;
+import ObjModelAnalysis.annotations.OneToMany;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 public class Movie {
@@ -19,8 +21,8 @@ public class Movie {
     @Column
     private String name;
     @Column
-    @ManyToOne
-    private Set<Rate> rateSet;
+    @OneToMany
+    private List<Rate> rates;
     @Column
     private Date releaseDate;
     @Column
@@ -28,11 +30,11 @@ public class Movie {
     private List<Actor> actors;
     @Column
     @OneToMany
-    private Set<Artist> artists;
+    private List<Artist> artists;
 
-    public Movie(String name, Set<Rate> rateSet, Date releaseDate, List<Actor> actors, Set<Artist> artists) {
+    public Movie(String name, List<Rate> rates, Date releaseDate, List<Actor> actors, List<Artist> artists) {
         this.name = name;
-        this.rateSet = rateSet;
+        this.rates = rates;
         this.releaseDate = releaseDate;
         this.actors = actors;
         this.artists = artists;
@@ -49,12 +51,12 @@ public class Movie {
         this.name = name;
     }
 
-    public Set<Rate> getRateSet() {
-        return rateSet;
+    public List<Rate> getRates() {
+        return rates;
     }
 
-    public void setRateSet(Set<Rate> rateSet) {
-        this.rateSet = rateSet;
+    public void setRates(List<Rate> rates) {
+        this.rates = rates;
     }
 
     public Date getReleaseDate() {
@@ -73,11 +75,11 @@ public class Movie {
         this.actors = actors;
     }
 
-    public Set<Artist> getArtists() {
+    public List<Artist> getArtists() {
         return artists;
     }
 
-    public void setArtists(Set<Artist> artists) {
+    public void setArtists(List<Artist> artists) {
         this.artists = artists;
     }
 
@@ -85,7 +87,7 @@ public class Movie {
     public String toString() {
         return "Movie{" +
                 "name='" + name + '\'' +
-                ", rateSet=" + rateSet +
+                ", rateSet=" + rates +
                 ", releaseDate=" + releaseDate +
                 ", actors=" + actors +
                 ", artists=" + artists +
