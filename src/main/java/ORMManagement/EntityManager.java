@@ -7,11 +7,14 @@
 package ORMManagement;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 public class EntityManager implements IEntityManager<Long> {
+    private Connection connection;
 
     public EntityManager(Connection connection) {
-
+        this.connection = connection;
     }
 
     @Override
@@ -26,7 +29,15 @@ public class EntityManager implements IEntityManager<Long> {
 
     @Override
     public void remove(Entity<Long> entity) {
-
+        Number id = entity.getId();
+        String tableName = entity.getClass().getSimpleName().toLowerCase();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM " + tableName + " WHERE id=?");
+            preparedStatement.setLong(1, id.longValue());
+            preparedStatement.execute();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     @Override
