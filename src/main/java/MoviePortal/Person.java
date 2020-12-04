@@ -66,4 +66,9 @@ public class Person implements ORMManagement.Entity<Long> {
     public Long getId() {
         return id;
     }
+
+    @Override
+    public void setID(Long id) {
+        this.id = id;
+    }
 }
