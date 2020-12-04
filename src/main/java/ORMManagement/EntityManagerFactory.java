@@ -24,10 +24,26 @@ import static ORMPrinciples.App.getTables;
 import static ObjModelAnalysis.App.find;
 
 public class EntityManagerFactory {
+    /**
+     * HashMap for keeping database structure:
+     * <p>
+     * key — table name,
+     * <p>
+     * value — HashSet of table columns name
+     */
     private final HashMap<String, HashSet<String>> tables = new HashMap<>();
-    private Properties properties;
+    /**
+     * Connection to database
+     */
     private Connection connection;
+    /**
+     * Properties of database connection
+     */
+    private Properties properties;
 
+    /**
+    * EntityManager Factory default constructor
+     * @param properties properties of database connection*/
     public EntityManagerFactory(Properties properties) {
         this.properties = properties;
     }
@@ -35,11 +51,17 @@ public class EntityManagerFactory {
     public HashMap<String, HashSet<String>> getTablesScheme() {
         return tables;
     }
-
-    public IEntityManager createEM() {
-        return null;
+    /**
+     * Method for creating {@linkplain EntityManager}
+     * @return new {@linkplain EntityManager} instance*/
+    public IEntityManager createEM() throws Exception {
+        if (isDbValid()) {
+            return new EntityManager(connection);
+        } else throw new Exception("The database is not correct");
     }
-
+    /**
+     * Method to connect to database server
+     * */
     public void connect() {
         if (connection == null) {
             try {
@@ -53,7 +75,9 @@ public class EntityManagerFactory {
             }
         }
     }
-
+    /**
+     * Method for checking the database correctness.
+     * @return true if database is correct, else — false  */
     public boolean isDbValid() {
         connect();
         analyzeDB();
@@ -75,7 +99,7 @@ public class EntityManagerFactory {
                             if (fieldGenericType instanceof ParameterizedType) {
                                 ParameterizedType paramType = (ParameterizedType) fieldGenericType;
                                 String genericClassName = ((Class<?>) paramType.getActualTypeArguments()[0]).getSimpleName().toLowerCase();
-                                if (!tables.get(genericClassName).contains(entity.getSimpleName().toLowerCase() + "_id")){
+                                if (!tables.get(genericClassName).contains(entity.getSimpleName().toLowerCase() + "_id")) {
                                     return false;
                                 }
                             }
@@ -84,17 +108,16 @@ public class EntityManagerFactory {
                         if (!tables.get(entity.getSimpleName().toLowerCase()).contains(fieldName + "_id")) {
                             return false;
                         }
-                    } else {
-                        if (!tables.get(entity.getSimpleName().toLowerCase()).contains(fieldName)) {
-                            return false;
-                        }
+                    } else if (!tables.get(entity.getSimpleName().toLowerCase()).contains(fieldName)) {
+                        return false;
                     }
                 }
             }
             return true;
         }
     }
-
+    /**
+     * Method for analyzing database, creates connection to DB and fills {@linkplain EntityManagerFactory#tables}*/
     private void analyzeDB() {
         connect();
         List<String> tablesList = getTables(connection);
