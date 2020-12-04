@@ -8,7 +8,7 @@ package ORMManagement;
 
 import java.sql.Connection;
 
-public class EntityManager implements IEntityManager {
+public class EntityManager implements IEntityManager<Long> {
 
     public EntityManager(Connection connection) {
 
@@ -30,7 +30,7 @@ public class EntityManager implements IEntityManager {
     }
 
     @Override
-    public <T> T find(Class<T> entityClass, Object entity) {
+    public <T> T find(Class<T> entityClass, Long id) {
         return null;
     }
 

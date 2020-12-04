@@ -15,7 +15,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-public class Movie {
+public class Movie implements ORMManagement.Entity<Long> {
     @Id
     private long id;
     @Column
@@ -92,5 +92,10 @@ public class Movie {
                 ", actors=" + actors +
                 ", artists=" + artists +
                 '}';
+    }
+
+    @Override
+    public Long getId() {
+        return id;
     }
 }

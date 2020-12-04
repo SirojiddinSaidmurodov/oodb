@@ -13,7 +13,7 @@ import ObjModelAnalysis.annotations.Id;
 import java.util.Date;
 
 @Entity
-public class Person {
+public class Person implements ORMManagement.Entity<Long> {
     @Id
     private long id;
     @Column
@@ -60,5 +60,10 @@ public class Person {
                 ", dateOfBirth=" + dateOfBirth +
                 ", bio='" + bio + '\'' +
                 '}';
+    }
+
+    @Override
+    public Long getId() {
+        return id;
     }
 }

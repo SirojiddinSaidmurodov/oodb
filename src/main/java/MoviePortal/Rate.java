@@ -13,7 +13,7 @@ import ObjModelAnalysis.annotations.Id;
 import java.util.Date;
 
 @Entity
-public class Rate {
+public class Rate implements ORMManagement.Entity<Long> {
     @Id
     private long id;
     @Column
@@ -48,5 +48,10 @@ public class Rate {
                 "value=" + value +
                 ", dateOfChange=" + dateOfChange +
                 '}';
+    }
+
+    @Override
+    public Long getId() {
+        return id;
     }
 }

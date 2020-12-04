@@ -42,8 +42,10 @@ public class EntityManagerFactory {
     private Properties properties;
 
     /**
-    * EntityManager Factory default constructor
-     * @param properties properties of database connection*/
+     * EntityManager Factory default constructor
+     *
+     * @param properties properties of database connection
+     */
     public EntityManagerFactory(Properties properties) {
         this.properties = properties;
     }
@@ -51,17 +53,21 @@ public class EntityManagerFactory {
     public HashMap<String, HashSet<String>> getTablesScheme() {
         return tables;
     }
+
     /**
      * Method for creating {@linkplain EntityManager}
-     * @return new {@linkplain EntityManager} instance*/
-    public IEntityManager createEM() throws Exception {
+     *
+     * @return new {@linkplain EntityManager} instance
+     */
+    public IEntityManager<Long> createEM() throws Exception {
         if (isDbValid()) {
             return new EntityManager(connection);
         } else throw new Exception("The database is not correct");
     }
+
     /**
      * Method to connect to database server
-     * */
+     */
     public void connect() {
         if (connection == null) {
             try {
@@ -75,9 +81,12 @@ public class EntityManagerFactory {
             }
         }
     }
+
     /**
      * Method for checking the database correctness.
-     * @return true if database is correct, else — false  */
+     *
+     * @return true if database is correct, else — false
+     */
     public boolean isDbValid() {
         connect();
         analyzeDB();
@@ -116,8 +125,10 @@ public class EntityManagerFactory {
             return true;
         }
     }
+
     /**
-     * Method for analyzing database, creates connection to DB and fills {@linkplain EntityManagerFactory#tables}*/
+     * Method for analyzing database, creates connection to DB and fills {@linkplain EntityManagerFactory#tables}
+     */
     private void analyzeDB() {
         connect();
         List<String> tablesList = getTables(connection);

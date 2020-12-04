@@ -12,7 +12,7 @@ import ObjModelAnalysis.annotations.Id;
 import ObjModelAnalysis.annotations.ManyToOne;
 
 @Entity
-public class Actor {
+public class Actor implements ORMManagement.Entity<Long> {
     @Id
     private long id;
     @Column
@@ -48,5 +48,10 @@ public class Actor {
                 "role='" + role + '\'' +
                 ", person=" + person +
                 '}';
+    }
+
+    @Override
+    public Long getId() {
+        return id;
     }
 }

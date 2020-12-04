@@ -14,7 +14,7 @@ import ObjModelAnalysis.annotations.OneToMany;
 import java.util.List;
 
 @Entity
-public class User {
+public class User implements ORMManagement.Entity<Long> {
     @Id
     private long id;
     @Column
@@ -77,5 +77,10 @@ public class User {
                 ", eMail='" + eMail + '\'' +
                 ", passwordHash='" + passwordHash + '\'' +
                 '}';
+    }
+
+    @Override
+    public Long getId() {
+        return id;
     }
 }
