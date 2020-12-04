@@ -15,7 +15,7 @@ public class EntityManager implements IEntityManager<Long> {
     }
 
     @Override
-    public void persist(Object entity) {
+    public void persist(Entity<Long> entity) {
 
     }
 
@@ -25,17 +25,17 @@ public class EntityManager implements IEntityManager<Long> {
     }
 
     @Override
-    public void remove(Object entity) {
+    public void remove(Entity<Long> entity) {
 
     }
 
     @Override
-    public <T> T find(Class<T> entityClass, Long id) {
+    public Entity<Long> find(Class<Entity<Long>> entityClass, Long id) {
         return null;
     }
 
     @Override
-    public void refresh(Object entity) {
+    public void refresh(Entity<Long> entity) {
 
     }
 }

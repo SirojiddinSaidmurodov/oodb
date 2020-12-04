@@ -6,13 +6,13 @@
 
 package ORMManagement;
 
-public interface IEntityManager<I> {
+public interface IEntityManager<I extends Number> {
     /**
      * Method for saving entity to DB
      *
      * @param entity entity object
      */
-    void persist(Object entity);
+    void persist(Entity<I> entity);
 
     /**
      * Method for updating the database record of this entity
@@ -27,7 +27,7 @@ public interface IEntityManager<I> {
      *
      * @param entity entity that you want to delete
      */
-    void remove(Object entity);
+    void remove(Entity<I> entity);
 
     /**
      * Method for getting an entity from database
@@ -36,12 +36,12 @@ public interface IEntityManager<I> {
      * @param <T>         class of entity
      * @param entityClass class object of entity class
      */
-    <T> T find(Class<T> entityClass, I id);
+    Entity<I> find(Class<Entity<I>> entityClass, I id);
 
     /**
      * Refresh the object fields from database
      *
      * @param entity entity
      */
-    void refresh(Object entity);
+    void refresh(Entity<I> entity);
 }
