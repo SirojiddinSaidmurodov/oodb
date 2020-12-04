@@ -6,6 +6,8 @@
 
 package ORMManagement;
 
+import java.util.List;
+
 public interface IEntityManager<I extends Number> {
     /**
      * Method for saving entity to DB
@@ -19,6 +21,7 @@ public interface IEntityManager<I extends Number> {
      *
      * @param entity entity object
      * @param <T>    class of entity
+     * @return updated entity object
      */
     <T> T merge(T entity);
 
@@ -30,10 +33,18 @@ public interface IEntityManager<I extends Number> {
     void remove(Entity<I> entity);
 
     /**
+     * Method for getting all entities from table
+     *
+     * @return List of entities
+     */
+    List<Entity<I>> findAll();
+
+    /**
      * Method for getting an entity from database
      *
      * @param id          id of entity record in database
      * @param entityClass class object of entity class
+     * @return found entity, null if not found
      */
     Entity<I> find(Class<Entity<I>> entityClass, I id);
 

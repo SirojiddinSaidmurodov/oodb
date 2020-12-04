@@ -9,6 +9,7 @@ package ORMManagement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
 
 public class EntityManager implements IEntityManager<Long> {
     private Connection connection;
@@ -38,6 +39,12 @@ public class EntityManager implements IEntityManager<Long> {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+    }
+
+    @Override
+    public List<Entity<Long>> findAll() {
+
+        return null;
     }
 
     @Override
