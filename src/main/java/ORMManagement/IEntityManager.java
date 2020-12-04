@@ -33,7 +33,6 @@ public interface IEntityManager<I extends Number> {
      * Method for getting an entity from database
      *
      * @param id          id of entity record in database
-     * @param <T>         class of entity
      * @param entityClass class object of entity class
      */
     Entity<I> find(Class<Entity<I>> entityClass, I id);
