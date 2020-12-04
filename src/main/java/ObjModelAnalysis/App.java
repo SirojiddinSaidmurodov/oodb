@@ -20,6 +20,7 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class App {
     // java path to package for scanning
@@ -114,7 +115,7 @@ public class App {
         }
         File scannedDir = new File(scannedUrl.getFile());
         List<Class<?>> classes = new ArrayList<>();
-        for (File file : scannedDir.listFiles()) {
+        for (File file : Objects.requireNonNull(scannedDir.listFiles())) {
             classes.addAll(find(file, App.PATH));
         }
         return classes;
