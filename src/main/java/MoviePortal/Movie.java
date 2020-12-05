@@ -100,7 +100,7 @@ public class Movie implements ORMManagement.Entity<Long> {
     }
 
     @Override
-    public void setID(Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 }

@@ -10,23 +10,26 @@ import ObjModelAnalysis.annotations.Column;
 import ObjModelAnalysis.annotations.Entity;
 import ObjModelAnalysis.annotations.Id;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 public class Person implements ORMManagement.Entity<Long> {
     @Id
-    private long id;
+    private Long id;
     @Column
     private String name;
     @Column
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
     @Column
     private String bio;
 
-    public Person(String name, Date dateOfBirth, String bio) {
+    public Person(String name, LocalDate dateOfBirth, String bio) {
         this.name = name;
         this.dateOfBirth = dateOfBirth;
         this.bio = bio;
+    }
+
+    public Person() {
     }
 
     public String getName() {
@@ -37,11 +40,11 @@ public class Person implements ORMManagement.Entity<Long> {
         this.name = name;
     }
 
-    public Date getDateOfBirth() {
+    public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
+    public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
@@ -68,7 +71,7 @@ public class Person implements ORMManagement.Entity<Long> {
     }
 
     @Override
-    public void setID(Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 }

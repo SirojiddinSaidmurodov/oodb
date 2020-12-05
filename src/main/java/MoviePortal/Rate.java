@@ -26,6 +26,9 @@ public class Rate implements ORMManagement.Entity<Long> {
         this.dateOfChange = dateOfChange;
     }
 
+    public Rate() {
+    }
+
     public byte getValue() {
         return value;
     }
@@ -56,7 +59,7 @@ public class Rate implements ORMManagement.Entity<Long> {
     }
 
     @Override
-    public void setID(Long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 }
