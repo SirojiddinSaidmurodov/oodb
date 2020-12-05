@@ -93,7 +93,7 @@ public class EntityManager implements IEntityManager<Long> {
                     Method setter = entityClass.getMethod(
                             name,
                             type);
-                    setter.invoke(entity, resultSet.getObject(i+1, type));
+                    setter.invoke(entity, resultSet.getObject(i + 1, type));
                 }
                 result.add((Entity<Long>) entity);
             }

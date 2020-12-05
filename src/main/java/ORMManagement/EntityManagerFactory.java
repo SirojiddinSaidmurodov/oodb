@@ -92,40 +92,44 @@ public class EntityManagerFactory {
     public boolean isDbValid() {
         connect();
         analyzeDB();
+
         List<Class<?>> classes = find()
                 .stream()
                 .filter(aClass -> aClass.isAnnotationPresent(Entity.class))
                 .collect(Collectors.toList());
-        if (classes.size() != tables.size()) {
-            return false;
-        } else {
-            for (Class<?> entity : classes) {
-                for (Field field : entity.getDeclaredFields()) {
-                    String fieldName = field.getName().toLowerCase();
-
-                    if (field.isAnnotationPresent(OneToMany.class)) {
-                        Class<?> fieldClass = field.getType();
-                        if (Collection.class.isAssignableFrom(fieldClass)) {
-                            Type fieldGenericType = field.getGenericType();
-                            if (fieldGenericType instanceof ParameterizedType) {
-                                ParameterizedType paramType = (ParameterizedType) fieldGenericType;
-                                String genericClassName = ((Class<?>) paramType.getActualTypeArguments()[0]).getSimpleName().toLowerCase();
-                                if (!tables.get(genericClassName).contains(entity.getSimpleName().toLowerCase() + "_id")) {
-                                    return false;
-                                }
-                            }
-                        }
-                    } else if (field.isAnnotationPresent(ManyToOne.class)) {
-                        if (!tables.get(entity.getSimpleName().toLowerCase()).contains(fieldName + "_id")) {
-                            return false;
-                        }
-                    } else if (!tables.get(entity.getSimpleName().toLowerCase()).contains(fieldName)) {
-                        return false;
-                    }
+        for (Class<?> entity : classes) {
+            for (Field field : entity.getDeclaredFields()) {
+                String fieldName = field.getName().toLowerCase();
+                if (field.isAnnotationPresent(OneToMany.class)) {
+                    if (!isForeignKeyPresent(entity, field)) return false;
+                } else if (field.isAnnotationPresent(ManyToOne.class)) {
+                    if (!tables.get(entity.getSimpleName().toLowerCase()).contains(fieldName + "_id")) return false;
+                } else if (!tables.get(entity.getSimpleName().toLowerCase()).contains(fieldName)) {
+                    return false;
                 }
             }
-            return true;
         }
+        return true;
+    }
+
+    /**
+     * Method for checking whether the foreign key that refers to entity exists in the table that represents field
+     *
+     * @param entity class of entity that has field annotated with {@linkplain ManyToOne} annotation
+     * @param field  Field instance collection that keeps instances of entities
+     * @return boolean, true if foreign key exists
+     */
+    private boolean isForeignKeyPresent(Class<?> entity, Field field) {
+        Class<?> fieldClass = field.getType();
+        if (Collection.class.isAssignableFrom(fieldClass)) {
+            Type fieldGenericType = field.getGenericType();
+            if (fieldGenericType instanceof ParameterizedType) {
+                ParameterizedType paramType = (ParameterizedType) fieldGenericType;
+                String genericClassName = ((Class<?>) paramType.getActualTypeArguments()[0]).getSimpleName().toLowerCase();
+                return tables.get(genericClassName).contains(entity.getSimpleName().toLowerCase() + "_id");
+            }
+        }
+        return false;
     }
 
     /**
