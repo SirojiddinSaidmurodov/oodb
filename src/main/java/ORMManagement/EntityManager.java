@@ -11,7 +11,6 @@ import ObjModelAnalysis.annotations.OneToMany;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -97,16 +96,9 @@ public class EntityManager implements IEntityManager<Long> {
                 }
                 result.add((Entity<Long>) entity);
             }
-        } catch (SQLException | NoSuchMethodException throwables) {
-            throwables.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
         return result;
     }
 
