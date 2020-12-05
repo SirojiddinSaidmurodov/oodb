@@ -9,5 +9,5 @@ package ORMManagement;
 public interface Entity<T extends Number> {
     T getId();
 
-    void setID(T id);
+    void setId(T id);
 }
