@@ -61,7 +61,9 @@ public class EntityManagerFactory {
      */
     public IEntityManager<Long> createEM() throws Exception {
         if (isDbValid()) {
-            return new EntityManager(connection);
+            IEntityManager<Long> entityManager = new EntityManager(connection);
+            entityManager.setTables(tables);
+            return entityManager;
         } else throw new Exception("The database is not correct");
     }
 

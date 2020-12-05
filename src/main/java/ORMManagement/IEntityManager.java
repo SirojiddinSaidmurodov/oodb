@@ -6,6 +6,8 @@
 
 package ORMManagement;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 public interface IEntityManager<I extends Number> {
@@ -37,7 +39,7 @@ public interface IEntityManager<I extends Number> {
      *
      * @return List of entities
      */
-    List<Entity<I>> findAll();
+    List<Entity<I>> findAll(Class<?> entityClass);
 
     /**
      * Method for getting an entity from database
@@ -54,4 +56,6 @@ public interface IEntityManager<I extends Number> {
      * @param entity entity
      */
     void refresh(Entity<I> entity);
+
+    void setTables(HashMap<String, HashSet<String>> tables);
 }
