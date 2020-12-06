@@ -61,7 +61,7 @@ public class EntityManager implements IEntityManager<Long> {
     public List<Entity<Long>> findAll(Class<?> entityClass) {
         ArrayList<Field> simpleFields = getSimpleFields(entityClass);
         String simpleColumns = getSimpleColumns(entityClass);
-        ArrayList<Entity<Long>> simpleEntities = getSimpleEntities(entityClass, simpleFields, simpleColumns);
+        ArrayList<Entity<Long>> simpleEntities = getSimpleEntitiesFromDB(entityClass, simpleFields, simpleColumns);
         if (hasManyToOne(entityClass)) {
             ArrayList<Field> manyToOneFields = getManyToOneFields(entityClass);
             for (Field field : manyToOneFields) {
@@ -80,7 +80,11 @@ public class EntityManager implements IEntityManager<Long> {
                         Method setter = entityClass.getMethod(
                                 name,
                                 type);
-                        setter.invoke(simpleEntity, find((Class<Entity<Long>>) type, fk));
+                        setter.invoke(
+                                simpleEntity,
+                                find(
+                                        (Class<Entity<Long>>) type,
+                                        fk));
                     } catch (SQLException | NoSuchMethodException e) {
                         e.printStackTrace();
                     } catch (IllegalAccessException e) {
@@ -98,13 +102,37 @@ public class EntityManager implements IEntityManager<Long> {
 
     @Override
     public Entity<Long> find(Class<Entity<Long>> entityClass, Long id) {
-        return null;
+        ArrayList<Field> simpleFields = getSimpleFields(entityClass);
+        String simpleColumns = getSimpleColumns(entityClass);
+        Entity<Long> simpleEntity = getSimpleEntityFromDB(entityClass, simpleFields, simpleColumns, id);
+        if (hasManyToOne(entityClass)) {
+        }
+        if (hasOneToMany(entityClass)) {
+        }
+        return simpleEntity;
+    }
+
+    private Entity<Long> getSimpleEntityFromDB(Class<Entity<Long>> entityClass, ArrayList<Field> fields, String columns, Long id) {
+        Entity<Long> entity = null;
+        try {
+            String tableName = entityClass.getSimpleName().toLowerCase();
+            PreparedStatement selectStatement = connection.prepareStatement(
+                    "SELECT " + columns + " FROM " + tableName + " WHERE id=" + id);
+            ResultSet resultSet = selectStatement.executeQuery();
+            Constructor<?> constructor = entityClass.getDeclaredConstructor(null);
+            entity = getSimpleEntityFromResultSet(entityClass, fields, resultSet, constructor);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        return entity;
     }
 
     private List<Entity<Long>> findAllWithFk(Class<?> entityClass) {
         ArrayList<Field> fields = getSimpleFields(entityClass);
         String columnsSql = getSimpleColumns(entityClass);
-        ArrayList<Entity<Long>> simpleEntities = getSimpleEntities(entityClass, fields, columnsSql);
+        ArrayList<Entity<Long>> simpleEntities = getSimpleEntitiesFromDB(entityClass, fields, columnsSql);
         if (hasManyToOne(entityClass)) {
             return null;
         }
@@ -114,7 +142,7 @@ public class EntityManager implements IEntityManager<Long> {
         return simpleEntities;
     }
 
-    private ArrayList<Entity<Long>> getSimpleEntities(Class<?> entityClass, ArrayList<Field> fields, String columnsSql) {
+    private ArrayList<Entity<Long>> getSimpleEntitiesFromDB(Class<?> entityClass, ArrayList<Field> fields, String columnsSql) {
         ArrayList<Entity<Long>> result = new ArrayList<>();
         try {
             String tableName = entityClass.getSimpleName().toLowerCase();
@@ -123,10 +151,10 @@ public class EntityManager implements IEntityManager<Long> {
 
             Constructor<?> constructor = entityClass.getDeclaredConstructor(null);
 
-            Object entity = getSimpleEntity(entityClass, fields, resultSet, constructor);
+            Entity<Long> entity = getSimpleEntityFromResultSet(entityClass, fields, resultSet, constructor);
             while (entity != null) {
-                result.add((Entity<Long>) entity);
-                entity = getSimpleEntity(entityClass, fields, resultSet, constructor);
+                result.add(entity);
+                entity = getSimpleEntityFromResultSet(entityClass, fields, resultSet, constructor);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -134,11 +162,11 @@ public class EntityManager implements IEntityManager<Long> {
         return result;
     }
 
-    private Object getSimpleEntity(Class<?> entityClass, ArrayList<Field> fields, ResultSet resultSet, Constructor<?> constructor) {
-        Object entity = null;
+    private Entity<Long> getSimpleEntityFromResultSet(Class<?> entityClass, ArrayList<Field> fields, ResultSet resultSet, Constructor<?> constructor) {
+        Entity<Long> entity = null;
         try {
             if (resultSet.next()) {
-                entity = constructor.newInstance(null);
+                entity = (Entity<Long>) constructor.newInstance(null);
                 for (int i = 0; i < fields.size(); i++) {
                     String name = fields.get(i).getName();
                     name = "set" + name.substring(0, 1).toUpperCase() + name.substring(1);
