@@ -58,8 +58,9 @@ public class Person implements ORMManagement.Entity<Long> {
 
     @Override
     public String toString() {
-        return "Personality{" +
-                "name='" + name + '\'' +
+        return "Person{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", dateOfBirth=" + dateOfBirth +
                 ", bio='" + bio + '\'' +
                 '}';

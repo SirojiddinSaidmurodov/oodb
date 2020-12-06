@@ -17,7 +17,7 @@ import java.util.List;
 @Entity
 public class Movie implements ORMManagement.Entity<Long> {
     @Id
-    private long id;
+    private Long id;
     @Column
     private String name;
     @Column
@@ -86,8 +86,9 @@ public class Movie implements ORMManagement.Entity<Long> {
     @Override
     public String toString() {
         return "Movie{" +
-                "name='" + name + '\'' +
-                ", rateSet=" + rates +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", rates=" + rates +
                 ", releaseDate=" + releaseDate +
                 ", actors=" + actors +
                 ", artists=" + artists +

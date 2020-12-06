@@ -14,7 +14,7 @@ import ObjModelAnalysis.annotations.ManyToOne;
 @Entity
 public class Artist implements ORMManagement.Entity<Long> {
     @Id
-    private long id;
+    private Long id;
     @Column
     @ManyToOne
     private Person person;
@@ -48,7 +48,8 @@ public class Artist implements ORMManagement.Entity<Long> {
     @Override
     public String toString() {
         return "Artist{" +
-                "person=" + person +
+                "id=" + id +
+                ", person=" + person +
                 ", occupation='" + occupation + '\'' +
                 '}';
     }

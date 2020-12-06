@@ -15,7 +15,7 @@ import java.util.Date;
 @Entity
 public class Rate implements ORMManagement.Entity<Long> {
     @Id
-    private long id;
+    private Long id;
     @Column
     private byte value;
     @Column
@@ -48,7 +48,8 @@ public class Rate implements ORMManagement.Entity<Long> {
     @Override
     public String toString() {
         return "Rate{" +
-                "value=" + value +
+                "id=" + id +
+                ", value=" + value +
                 ", dateOfChange=" + dateOfChange +
                 '}';
     }

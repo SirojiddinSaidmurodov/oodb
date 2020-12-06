@@ -16,7 +16,7 @@ import java.util.List;
 @Entity
 public class User implements ORMManagement.Entity<Long> {
     @Id
-    private long id;
+    private Long id;
     @Column
     private String name;
     @Column
@@ -72,7 +72,8 @@ public class User implements ORMManagement.Entity<Long> {
     @Override
     public String toString() {
         return "User{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", userRate=" + userRate +
                 ", eMail='" + eMail + '\'' +
                 ", passwordHash='" + passwordHash + '\'' +

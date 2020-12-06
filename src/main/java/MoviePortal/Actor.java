@@ -14,7 +14,7 @@ import ObjModelAnalysis.annotations.ManyToOne;
 @Entity
 public class Actor implements ORMManagement.Entity<Long> {
     @Id
-    private long id;
+    private Long id;
     @Column
     private String role;
     @Column
@@ -48,7 +48,8 @@ public class Actor implements ORMManagement.Entity<Long> {
     @Override
     public String toString() {
         return "Actor{" +
-                "role='" + role + '\'' +
+                "id=" + id +
+                ", role='" + role + '\'' +
                 ", person=" + person +
                 '}';
     }
