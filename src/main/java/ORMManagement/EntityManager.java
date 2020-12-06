@@ -11,6 +11,7 @@ import ObjModelAnalysis.annotations.OneToMany;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -58,17 +59,46 @@ public class EntityManager implements IEntityManager<Long> {
 
     @Override
     public List<Entity<Long>> findAll(Class<?> entityClass) {
-        ArrayList<Field> fields = getSimpleFields(entityClass);
-        String columnsSql = getSimpleColumns(entityClass);
-        ArrayList<Entity<Long>> simpleEntities = getSimpleEntities(entityClass, fields, columnsSql);
+        ArrayList<Field> simpleFields = getSimpleFields(entityClass);
+        String simpleColumns = getSimpleColumns(entityClass);
+        ArrayList<Entity<Long>> simpleEntities = getSimpleEntities(entityClass, simpleFields, simpleColumns);
         if (hasManyToOne(entityClass)) {
-
-            return null;
+            ArrayList<Field> manyToOneFields = getManyToOneFields(entityClass);
+            for (Field field : manyToOneFields) {
+                for (Entity<Long> simpleEntity : simpleEntities) {
+                    try {
+                        PreparedStatement preparedStatement = connection.prepareStatement(
+                                "SELECT " + field.getName().toLowerCase() + "_id" +
+                                        " FROM " + entityClass.getSimpleName().toLowerCase() +
+                                        " WHERE id=" + simpleEntity.getId());
+                        ResultSet resultSet = preparedStatement.executeQuery();
+                        resultSet.next();
+                        long fk = resultSet.getLong(1);
+                        String name = field.getName();
+                        name = "set" + name.substring(0, 1).toUpperCase() + name.substring(1);
+                        Class<?> type = field.getType();
+                        Method setter = entityClass.getMethod(
+                                name,
+                                type);
+                        setter.invoke(simpleEntity, find((Class<Entity<Long>>) type, fk));
+                    } catch (SQLException | NoSuchMethodException e) {
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    } catch (InvocationTargetException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
         }
         if (hasOneToMany(entityClass)) {
-            return null;
         }
         return simpleEntities;
+    }
+
+    @Override
+    public Entity<Long> find(Class<Entity<Long>> entityClass, Long id) {
+        return null;
     }
 
     private List<Entity<Long>> findAllWithFk(Class<?> entityClass) {
@@ -83,7 +113,6 @@ public class EntityManager implements IEntityManager<Long> {
         }
         return simpleEntities;
     }
-
 
     private ArrayList<Entity<Long>> getSimpleEntities(Class<?> entityClass, ArrayList<Field> fields, String columnsSql) {
         ArrayList<Entity<Long>> result = new ArrayList<>();
@@ -117,7 +146,9 @@ public class EntityManager implements IEntityManager<Long> {
                     Method setter = entityClass.getMethod(
                             name,
                             type);
-                    setter.invoke(entity, resultSet.getObject(i + 1, type));
+                    setter.invoke(
+                            entity,
+                            resultSet.getObject(i + 1, type));
                 }
             }
         } catch (Exception e) {
@@ -126,11 +157,20 @@ public class EntityManager implements IEntityManager<Long> {
         return entity;
     }
 
-
     private ArrayList<Field> getSimpleFields(Class<?> entityClass) {
         ArrayList<Field> fields = new ArrayList<>();
         for (Field declaredField : entityClass.getDeclaredFields()) {
             if (!(declaredField.isAnnotationPresent(OneToMany.class) || declaredField.isAnnotationPresent(ManyToOne.class))) {
+                fields.add(declaredField);
+            }
+        }
+        return fields;
+    }
+
+    private ArrayList<Field> getManyToOneFields(Class<?> entityClass) {
+        ArrayList<Field> fields = new ArrayList<>();
+        for (Field declaredField : entityClass.getDeclaredFields()) {
+            if (declaredField.isAnnotationPresent(ManyToOne.class)) {
                 fields.add(declaredField);
             }
         }
@@ -166,11 +206,6 @@ public class EntityManager implements IEntityManager<Long> {
             }
         }
         return false;
-    }
-
-    @Override
-    public Entity<Long> find(Class<Entity<Long>> entityClass, Long id) {
-        return null;
     }
 
     @Override

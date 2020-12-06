@@ -6,6 +6,7 @@
 
 package ORMManagement;
 
+import MoviePortal.Artist;
 import MoviePortal.Person;
 
 import java.io.FileReader;
@@ -22,7 +23,6 @@ public class App {
 
         IEntityManager<Long> entityManager = factory.createEM();
 
-        Entity<Long> e = new Person();
         Class<Person> personClass = Person.class;
 
         List<Person> collect = entityManager
@@ -31,5 +31,14 @@ public class App {
                 .map(entity -> (Person) entity)
                 .collect(Collectors.toList());
         collect.forEach(System.out::println);
+        System.out.println(" " +
+                "" +
+                "" +
+                "" +
+                "");
+        List<Entity<Long>> all = entityManager.findAll(Artist.class);
+
+        all.stream().map(entity -> (Artist) entity).forEach(System.out::println);
+
     }
 }
