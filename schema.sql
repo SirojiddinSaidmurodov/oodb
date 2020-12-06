@@ -10,7 +10,7 @@ DROP TABLE IF EXISTS movie CASCADE;
 CREATE TABLE movie
 (
     id          BIGSERIAL,
-    name        char(255),
+    name        text,
     releaseDate date,
     PRIMARY KEY (id)
 );
@@ -19,7 +19,7 @@ DROP TABLE IF EXISTS person CASCADE;
 CREATE TABLE person
 (
     id          BIGSERIAL,
-    "name"      char(100),
+    "name"      text,
     dateOfBirth date,
     bio         text,
     PRIMARY KEY (id)
@@ -29,7 +29,7 @@ DROP TABLE IF EXISTS actor CASCADE;
 CREATE TABLE actor
 (
     id        BIGSERIAL,
-    role      char(255),
+    role      text,
     person_id BIGINT,
     movie_id  BIGINT,
     PRIMARY KEY (id),
@@ -45,7 +45,7 @@ DROP TABLE IF EXISTS artist CASCADE;
 CREATE TABLE artist
 (
     id         BIGSERIAL,
-    occupation char(255),
+    occupation text,
     person_id  BIGINT,
     movie_id   BIGINT,
     PRIMARY KEY (id),
@@ -60,10 +60,10 @@ CREATE TABLE artist
 DROP TABLE IF EXISTS "user" CASCADE;
 CREATE TABLE "user"
 (
-    id    BIGSERIAL,
-    name  char(255),
-    eMail char(25),
-    passwordHash char(50),
+    id           BIGSERIAL,
+    name         text,
+    eMail        text,
+    passwordHash text,
     PRIMARY KEY (id)
 );
 
@@ -74,7 +74,7 @@ CREATE TABLE rate
     value        integer,
     movie_id     bigint,
     dateOfChange date,
-    user_id       bigint,
+    user_id      bigint,
     PRIMARY KEY (id),
     FOREIGN KEY (movie_id) REFERENCES movie (id)
         ON UPDATE CASCADE
