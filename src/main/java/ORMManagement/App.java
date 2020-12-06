@@ -19,11 +19,17 @@ public class App {
         properties.load(new FileReader("src/main/resources/connection.properties"));
         EntityManagerFactory factory = new EntityManagerFactory(properties);
         System.out.println(factory.isDbValid());
+
         IEntityManager<Long> entityManager = factory.createEM();
+
         Entity<Long> e = new Person();
-        Class<Person> entityClass = Person.class;
-        List<Person> collect = entityManager.findAll(entityClass).stream().map(entity -> (Person) entity).collect(Collectors.toList());
-        System.out.println(collect);
-        System.out.println(entityManager.findAll(entityClass).size());
+        Class<Person> personClass = Person.class;
+
+        List<Person> collect = entityManager
+                .findAll(personClass)
+                .stream()
+                .map(entity -> (Person) entity)
+                .collect(Collectors.toList());
+        collect.forEach(System.out::println);
     }
 }

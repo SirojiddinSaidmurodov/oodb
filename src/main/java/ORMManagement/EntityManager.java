@@ -39,7 +39,7 @@ public class EntityManager implements IEntityManager<Long> {
     }
 
     @Override
-    public <T> T merge(T entity) {
+    public <E extends Entity<Long>> E merge(E entity) {
         return null;
     }
 
@@ -58,33 +58,58 @@ public class EntityManager implements IEntityManager<Long> {
 
     @Override
     public List<Entity<Long>> findAll(Class<?> entityClass) {
-        ArrayList<Entity<Long>> result = new ArrayList<>();
-        String tableName = entityClass.getSimpleName().toLowerCase();
+        ArrayList<Field> fields = getSimpleFields(entityClass);
+        String columnsSql = getSimpleColumns(entityClass);
+        ArrayList<Entity<Long>> simpleEntities = getSimpleEntities(entityClass, fields, columnsSql);
+        if (hasManyToOne(entityClass)) {
 
-        StringBuilder builder = new StringBuilder();
-        ArrayList<Field> fields = new ArrayList<>();
-        for (Field declaredField : entityClass.getDeclaredFields()) {
-            if (declaredField.isAnnotationPresent(OneToMany.class)) {
-
-            } else if (declaredField.isAnnotationPresent(ManyToOne.class)) {
-
-            } else {
-                String s = declaredField.getName().toLowerCase();
-                builder.append(s);
-                fields.add(declaredField);
-            }
-            builder.append(",");
+            return null;
         }
-        builder.deleteCharAt(builder.lastIndexOf(","));
-        String columns = builder.toString();
-        PreparedStatement selectStatement = null;
+        if (hasOneToMany(entityClass)) {
+            return null;
+        }
+        return simpleEntities;
+    }
+
+    private List<Entity<Long>> findAllWithFk(Class<?> entityClass) {
+        ArrayList<Field> fields = getSimpleFields(entityClass);
+        String columnsSql = getSimpleColumns(entityClass);
+        ArrayList<Entity<Long>> simpleEntities = getSimpleEntities(entityClass, fields, columnsSql);
+        if (hasManyToOne(entityClass)) {
+            return null;
+        }
+        if (hasOneToMany(entityClass)) {
+            return null;
+        }
+        return simpleEntities;
+    }
+
+
+    private ArrayList<Entity<Long>> getSimpleEntities(Class<?> entityClass, ArrayList<Field> fields, String columnsSql) {
+        ArrayList<Entity<Long>> result = new ArrayList<>();
         try {
-            selectStatement = connection.prepareStatement("SELECT " + columns + " FROM " + tableName);
+            String tableName = entityClass.getSimpleName().toLowerCase();
+            PreparedStatement selectStatement = connection.prepareStatement("SELECT " + columnsSql + " FROM " + tableName);
             ResultSet resultSet = selectStatement.executeQuery();
 
             Constructor<?> constructor = entityClass.getDeclaredConstructor(null);
-            while (resultSet.next()) {
-                Object entity = constructor.newInstance(null);
+
+            Object entity = getSimpleEntity(entityClass, fields, resultSet, constructor);
+            while (entity != null) {
+                result.add((Entity<Long>) entity);
+                entity = getSimpleEntity(entityClass, fields, resultSet, constructor);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    private Object getSimpleEntity(Class<?> entityClass, ArrayList<Field> fields, ResultSet resultSet, Constructor<?> constructor) {
+        Object entity = null;
+        try {
+            if (resultSet.next()) {
+                entity = constructor.newInstance(null);
                 for (int i = 0; i < fields.size(); i++) {
                     String name = fields.get(i).getName();
                     name = "set" + name.substring(0, 1).toUpperCase() + name.substring(1);
@@ -94,12 +119,53 @@ public class EntityManager implements IEntityManager<Long> {
                             type);
                     setter.invoke(entity, resultSet.getObject(i + 1, type));
                 }
-                result.add((Entity<Long>) entity);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return result;
+        return entity;
+    }
+
+
+    private ArrayList<Field> getSimpleFields(Class<?> entityClass) {
+        ArrayList<Field> fields = new ArrayList<>();
+        for (Field declaredField : entityClass.getDeclaredFields()) {
+            if (!(declaredField.isAnnotationPresent(OneToMany.class) || declaredField.isAnnotationPresent(ManyToOne.class))) {
+                fields.add(declaredField);
+            }
+        }
+        return fields;
+    }
+
+    private String getSimpleColumns(Class<?> entityClass) {
+        StringBuilder columns = new StringBuilder();
+        for (Field declaredField : entityClass.getDeclaredFields()) {
+            if (!(declaredField.isAnnotationPresent(OneToMany.class) || declaredField.isAnnotationPresent(ManyToOne.class))) {
+                String s = declaredField.getName().toLowerCase();
+                columns.append(s);
+                columns.append(",");
+            }
+        }
+        columns.deleteCharAt(columns.lastIndexOf(","));
+        return columns.toString();
+    }
+
+    private boolean hasOneToMany(Class<?> entityClass) {
+        for (Field declaredField : entityClass.getDeclaredFields()) {
+            if (declaredField.isAnnotationPresent(OneToMany.class)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean hasManyToOne(Class<?> entityClass) {
+        for (Field declaredField : entityClass.getDeclaredFields()) {
+            if (declaredField.isAnnotationPresent(ManyToOne.class)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
