@@ -66,32 +66,10 @@ public class EntityManager implements IEntityManager<Long> {
             ArrayList<Field> manyToOneFields = getManyToOneFields(entityClass);
             for (Field field : manyToOneFields) {
                 for (Entity<Long> simpleEntity : simpleEntities) {
-                    try {
-                        PreparedStatement preparedStatement = connection.prepareStatement(
-                                "SELECT " + field.getName().toLowerCase() + "_id" +
-                                        " FROM " + entityClass.getSimpleName().toLowerCase() +
-                                        " WHERE id=" + simpleEntity.getId());
-                        ResultSet resultSet = preparedStatement.executeQuery();
-                        resultSet.next();
-                        long fk = resultSet.getLong(1);
-                        String name = field.getName();
-                        name = "set" + name.substring(0, 1).toUpperCase() + name.substring(1);
-                        Class<?> type = field.getType();
-                        Method setter = entityClass.getMethod(
-                                name,
-                                type);
-                        setter.invoke(
-                                simpleEntity,
-                                find(
-                                        (Class<Entity<Long>>) type,
-                                        fk));
-                    } catch (SQLException | NoSuchMethodException e) {
-                        e.printStackTrace();
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    } catch (InvocationTargetException e) {
-                        e.printStackTrace();
-                    }
+                    setFkObjectToEntity(
+                            simpleEntity,
+                            entityClass,
+                            field);
                 }
             }
         }
@@ -100,12 +78,49 @@ public class EntityManager implements IEntityManager<Long> {
         return simpleEntities;
     }
 
+    private void setFkObjectToEntity(Entity<Long> entity, Class<?> entityType, Field fieldWithFK) {
+        PreparedStatement preparedStatement = null;
+        try {
+            preparedStatement = connection.prepareStatement(
+                    "SELECT " + fieldWithFK.getName().toLowerCase() + "_id" +
+                            " FROM " + entityType.getSimpleName().toLowerCase() +
+                            " WHERE id=" + entity.getId());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            long fk = resultSet.getLong(1);
+            String name = fieldWithFK.getName();
+            name = "set" + name.substring(0, 1).toUpperCase() + name.substring(1);
+            Class<?> type = fieldWithFK.getType();
+            Method setter = entityType.getMethod(
+                    name,
+                    type);
+            setter.invoke(
+                    entity,
+                    find(
+                            (Class<Entity<Long>>) type,
+                            fk));
+        } catch (SQLException | NoSuchMethodException throwables) {
+            throwables.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public Entity<Long> find(Class<Entity<Long>> entityClass, Long id) {
         ArrayList<Field> simpleFields = getSimpleFields(entityClass);
         String simpleColumns = getSimpleColumns(entityClass);
         Entity<Long> simpleEntity = getSimpleEntityFromDB(entityClass, simpleFields, simpleColumns, id);
         if (hasManyToOne(entityClass)) {
+            ArrayList<Field> manyToOneFields = getManyToOneFields(entityClass);
+            for (Field field : manyToOneFields) {
+                setFkObjectToEntity(
+                        simpleEntity,
+                        entityClass,
+                        field);
+            }
         }
         if (hasOneToMany(entityClass)) {
         }
