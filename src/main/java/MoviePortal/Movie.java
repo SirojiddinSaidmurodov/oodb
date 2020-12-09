@@ -11,7 +11,7 @@ import ObjModelAnalysis.annotations.Entity;
 import ObjModelAnalysis.annotations.Id;
 import ObjModelAnalysis.annotations.OneToMany;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -24,7 +24,7 @@ public class Movie implements ORMManagement.Entity<Long> {
     @OneToMany
     private List<Rate> rates;
     @Column
-    private Date releaseDate;
+    private LocalDate releaseDate;
     @Column
     @OneToMany
     private List<Actor> actors;
@@ -32,7 +32,7 @@ public class Movie implements ORMManagement.Entity<Long> {
     @OneToMany
     private List<Artist> artists;
 
-    public Movie(String name, List<Rate> rates, Date releaseDate, List<Actor> actors, List<Artist> artists) {
+    public Movie(String name, List<Rate> rates, LocalDate releaseDate, List<Actor> actors, List<Artist> artists) {
         this.name = name;
         this.rates = rates;
         this.releaseDate = releaseDate;
@@ -59,11 +59,11 @@ public class Movie implements ORMManagement.Entity<Long> {
         this.rates = rates;
     }
 
-    public Date getReleaseDate() {
+    public LocalDate getReleaseDate() {
         return releaseDate;
     }
 
-    public void setReleaseDate(Date releaseDate) {
+    public void setReleaseDate(LocalDate releaseDate) {
         this.releaseDate = releaseDate;
     }
 
