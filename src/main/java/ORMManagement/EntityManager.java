@@ -64,8 +64,8 @@ public class EntityManager implements IEntityManager<Long> {
         ArrayList<Entity<Long>> simpleEntities = getSimpleEntitiesFromDB(entityClass, simpleFields, simpleColumns);
         if (hasManyToOne(entityClass)) {
             ArrayList<Field> manyToOneFields = getManyToOneFields(entityClass);
-            for (Field field : manyToOneFields) {
-                for (Entity<Long> simpleEntity : simpleEntities) {
+            for (Entity<Long> simpleEntity : simpleEntities) {
+                for (Field field : manyToOneFields) {
                     setFkObjectToEntity(
                             simpleEntity,
                             entityClass,
@@ -74,8 +74,47 @@ public class EntityManager implements IEntityManager<Long> {
             }
         }
         if (hasOneToMany(entityClass)) {
+            ArrayList<Field> oneToManyFields = getOneToManyFields(entityClass);
+            for (Entity<Long> entity : simpleEntities) {
+                for (Field field : oneToManyFields) {
+                    setListToField(
+                            entity,
+                            entityClass,
+                            field);
+                }
+            }
         }
         return simpleEntities;
+    }
+
+    private void setListToField(Entity<Long> entity, Class<?> entityClass, Field field) {
+
+    }
+
+    @Override
+    public Entity<Long> find(Class<Entity<Long>> entityClass, Long id) {
+        ArrayList<Field> simpleFields = getSimpleFields(entityClass);
+        String simpleColumns = getSimpleColumns(entityClass);
+        Entity<Long> simpleEntity = getSimpleEntityFromDB(entityClass, simpleFields, simpleColumns, id);
+        if (hasManyToOne(entityClass)) {
+            ArrayList<Field> manyToOneFields = getManyToOneFields(entityClass);
+            for (Field field : manyToOneFields) {
+                setFkObjectToEntity(
+                        simpleEntity,
+                        entityClass,
+                        field);
+            }
+        }
+        if (hasOneToMany(entityClass)) {
+            ArrayList<Field> oneToManyFields = getOneToManyFields(entityClass);
+            for (Field oneToManyField : oneToManyFields) {
+                setListToField(
+                        simpleEntity,
+                        entityClass,
+                        oneToManyField);
+            }
+        }
+        return simpleEntity;
     }
 
     private void setFkObjectToEntity(Entity<Long> entity, Class<?> entityType, Field fieldWithFK) {
@@ -106,25 +145,6 @@ public class EntityManager implements IEntityManager<Long> {
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public Entity<Long> find(Class<Entity<Long>> entityClass, Long id) {
-        ArrayList<Field> simpleFields = getSimpleFields(entityClass);
-        String simpleColumns = getSimpleColumns(entityClass);
-        Entity<Long> simpleEntity = getSimpleEntityFromDB(entityClass, simpleFields, simpleColumns, id);
-        if (hasManyToOne(entityClass)) {
-            ArrayList<Field> manyToOneFields = getManyToOneFields(entityClass);
-            for (Field field : manyToOneFields) {
-                setFkObjectToEntity(
-                        simpleEntity,
-                        entityClass,
-                        field);
-            }
-        }
-        if (hasOneToMany(entityClass)) {
-        }
-        return simpleEntity;
     }
 
     private Entity<Long> getSimpleEntityFromDB(Class<Entity<Long>> entityClass, ArrayList<Field> fields, String columns, Long id) {
@@ -214,6 +234,16 @@ public class EntityManager implements IEntityManager<Long> {
         ArrayList<Field> fields = new ArrayList<>();
         for (Field declaredField : entityClass.getDeclaredFields()) {
             if (declaredField.isAnnotationPresent(ManyToOne.class)) {
+                fields.add(declaredField);
+            }
+        }
+        return fields;
+    }
+
+    private ArrayList<Field> getOneToManyFields(Class<?> entityClass) {
+        ArrayList<Field> fields = new ArrayList<>();
+        for (Field declaredField : entityClass.getDeclaredFields()) {
+            if (declaredField.isAnnotationPresent(OneToMany.class)) {
                 fields.add(declaredField);
             }
         }

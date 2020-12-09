@@ -31,11 +31,7 @@ public class App {
                 .map(entity -> (Person) entity)
                 .collect(Collectors.toList());
         collect.forEach(System.out::println);
-        System.out.println(" " +
-                "" +
-                "" +
-                "" +
-                "");
+        System.out.println("\n\n");
         List<Entity<Long>> all = entityManager.findAll(Artist.class);
 
         all.stream().map(entity -> (Artist) entity).forEach(System.out::println);
