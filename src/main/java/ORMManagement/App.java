@@ -7,6 +7,7 @@
 package ORMManagement;
 
 import MoviePortal.Artist;
+import MoviePortal.Movie;
 import MoviePortal.Person;
 
 import java.io.FileReader;
@@ -35,6 +36,9 @@ public class App {
         List<Entity<Long>> all = entityManager.findAll(Artist.class);
 
         all.stream().map(entity -> (Artist) entity).forEach(System.out::println);
+
+        List<Entity<Long>> all1 = entityManager.findAll(Movie.class);
+        all1.stream().map(entity -> (Movie) entity).forEach(System.out::println);
 
     }
 }

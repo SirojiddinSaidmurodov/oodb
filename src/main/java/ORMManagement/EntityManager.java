@@ -9,10 +9,7 @@ package ORMManagement;
 import ObjModelAnalysis.annotations.ManyToOne;
 import ObjModelAnalysis.annotations.OneToMany;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -59,9 +56,13 @@ public class EntityManager implements IEntityManager<Long> {
 
     @Override
     public List<Entity<Long>> findAll(Class<?> entityClass) {
+        return findAll(entityClass, "");
+    }
+
+    private List<Entity<Long>> findAll(Class<?> entityClass, String whereExpression) {
         ArrayList<Field> simpleFields = getSimpleFields(entityClass);
         String simpleColumns = getSimpleColumns(entityClass);
-        ArrayList<Entity<Long>> simpleEntities = getSimpleEntitiesFromDB(entityClass, simpleFields, simpleColumns);
+        ArrayList<Entity<Long>> simpleEntities = getSimpleEntitiesFromDB(entityClass, simpleFields, simpleColumns, whereExpression);
         if (hasManyToOne(entityClass)) {
             ArrayList<Field> manyToOneFields = getManyToOneFields(entityClass);
             for (Entity<Long> simpleEntity : simpleEntities) {
@@ -85,10 +86,6 @@ public class EntityManager implements IEntityManager<Long> {
             }
         }
         return simpleEntities;
-    }
-
-    private void setListToField(Entity<Long> entity, Class<?> entityClass, Field field) {
-
     }
 
     @Override
@@ -115,6 +112,35 @@ public class EntityManager implements IEntityManager<Long> {
             }
         }
         return simpleEntity;
+    }
+
+    private void setListToField(Entity<Long> entity, Class<?> entityClass, Field field) {
+        ParameterizedType listGenericType = (ParameterizedType) field.getGenericType();
+        Class<?> foreignEntitiesClass = (Class<?>) listGenericType.getActualTypeArguments()[0];
+
+        String foreignTableName = (foreignEntitiesClass).getSimpleName().toLowerCase();
+        String entityTableName = entityClass.getSimpleName().toLowerCase();
+
+        List<Entity<Long>> foreignEntities = findAll(
+                foreignEntitiesClass,
+                " WHERE " + entityTableName + "_id = " + entity.getId());
+
+        String name = field.getName();
+        name = "set" + name.substring(0, 1).toUpperCase() + name.substring(1);
+        Class<?> type = field.getType();
+        try {
+            Method setter = entityClass.getMethod(
+                    name,
+                    type);
+            setter.invoke(entity, foreignEntities);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void setFkObjectToEntity(Entity<Long> entity, Class<?> entityType, Field fieldWithFK) {
@@ -164,24 +190,15 @@ public class EntityManager implements IEntityManager<Long> {
         return entity;
     }
 
-    private List<Entity<Long>> findAllWithFk(Class<?> entityClass) {
-        ArrayList<Field> fields = getSimpleFields(entityClass);
-        String columnsSql = getSimpleColumns(entityClass);
-        ArrayList<Entity<Long>> simpleEntities = getSimpleEntitiesFromDB(entityClass, fields, columnsSql);
-        if (hasManyToOne(entityClass)) {
-            return null;
-        }
-        if (hasOneToMany(entityClass)) {
-            return null;
-        }
-        return simpleEntities;
-    }
-
-    private ArrayList<Entity<Long>> getSimpleEntitiesFromDB(Class<?> entityClass, ArrayList<Field> fields, String columnsSql) {
+    private ArrayList<Entity<Long>> getSimpleEntitiesFromDB(Class<?> entityClass, ArrayList<Field> fields, String columnsSql, String where) {
         ArrayList<Entity<Long>> result = new ArrayList<>();
         try {
             String tableName = entityClass.getSimpleName().toLowerCase();
-            PreparedStatement selectStatement = connection.prepareStatement("SELECT " + columnsSql + " FROM " + tableName);
+            StringBuilder select_ = new StringBuilder().append("SELECT ").append(columnsSql).append(" FROM ").append(tableName);
+            if (!where.isEmpty()) {
+                select_.append(where);
+            }
+            PreparedStatement selectStatement = connection.prepareStatement(select_.toString());
             ResultSet resultSet = selectStatement.executeQuery();
 
             Constructor<?> constructor = entityClass.getDeclaredConstructor(null);
