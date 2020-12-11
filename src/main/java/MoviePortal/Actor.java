@@ -47,11 +47,11 @@ public class Actor implements ORMManagement.Entity<Long> {
 
     @Override
     public String toString() {
-        return "Actor{" +
-                "id=" + id +
-                ", role='" + role + '\'' +
-                ", person=" + person +
-                '}';
+        return "{class:'Actor'," +
+                "id:" + id +
+                ", role:'" + role + '\'' +
+                ", person:" + person +
+                "}";
     }
 
     @Override

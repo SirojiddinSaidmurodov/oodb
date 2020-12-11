@@ -47,11 +47,11 @@ public class Artist implements ORMManagement.Entity<Long> {
 
     @Override
     public String toString() {
-        return "Artist{" +
-                "id=" + id +
-                ", person=" + person +
-                ", occupation='" + occupation + '\'' +
-                '}';
+        return "{class:'Artist'," +
+                "id:" + id +
+                ", occupation:'" + occupation + '\'' +
+                ", person:" + person +
+                "}";
     }
 
     @Override

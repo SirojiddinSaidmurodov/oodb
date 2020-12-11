@@ -85,14 +85,14 @@ public class Movie implements ORMManagement.Entity<Long> {
 
     @Override
     public String toString() {
-        return "Movie{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", rates=" + rates +
-                ", releaseDate=" + releaseDate +
-                ", actors=" + actors +
-                ", artists=" + artists +
-                '}';
+        return "{class:'Movie'," +
+                "id:" + id +
+                ", name:'" + name + '\'' +
+                ", releaseDate:" + releaseDate +
+                ", actors:" + actors +
+                ", artists:" + artists +
+                ", rates:" + rates +
+                "}";
     }
 
     @Override

@@ -47,10 +47,10 @@ public class Rate implements ORMManagement.Entity<Long> {
 
     @Override
     public String toString() {
-        return "Rate{" +
-                "id=" + id +
-                ", value=" + value +
-                ", dateOfChange=" + dateOfChange +
+        return "{class:'Rate'," +
+                "id:" + id +
+                ", value:" + value +
+                ", dateOfChange:" + dateOfChange +
                 '}';
     }
 

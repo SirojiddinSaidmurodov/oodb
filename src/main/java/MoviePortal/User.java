@@ -71,12 +71,12 @@ public class User implements ORMManagement.Entity<Long> {
 
     @Override
     public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", userRate=" + userRate +
-                ", eMail='" + eMail + '\'' +
-                ", passwordHash='" + passwordHash + '\'' +
+        return "{class:'User'," +
+                "id:" + id +
+                ", name:'" + name + '\'' +
+                ", userRate:" + userRate +
+                ", eMail:'" + eMail + '\'' +
+                ", passwordHash:'" + passwordHash + '\'' +
                 '}';
     }
 
