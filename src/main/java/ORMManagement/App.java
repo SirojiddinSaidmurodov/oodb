@@ -12,8 +12,6 @@ import MoviePortal.Movie;
 import MoviePortal.Person;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 
 import java.io.FileReader;
 import java.time.LocalDate;
@@ -24,6 +22,8 @@ import java.util.stream.Collectors;
 
 public class App {
     public static void main(String[] args) throws Exception {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
         Properties properties = new Properties();
         properties.load(new FileReader("src/main/resources/connection.properties"));
         EntityManagerFactory factory = new EntityManagerFactory(properties);
@@ -42,15 +42,11 @@ public class App {
         System.out.println("\n\n");
         List<Entity<Long>> all = entityManager.findAll(Artist.class);
 
-        all.stream().map(entity -> (Artist) entity).forEach(System.out::println);
+        all.stream().map(entity -> (Artist) entity).forEach(x -> System.out.println(gson.toJson(x)));
 
         List<Entity<Long>> all1 = entityManager.findAll(Movie.class);
 
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        JsonParser jp = new JsonParser();
-        JsonElement je = jp.parse(all1.toString());
-        String prettyJsonString = gson.toJson(je);
-        System.out.println(prettyJsonString);
+        System.out.println(gson.toJson(all1));
         System.out.println("\n\n==========================PersistTest================================\n\n");
         System.out.println("BEFORE PERSISTING");
         ArrayList<Actor> actors = new ArrayList<>();
@@ -65,10 +61,10 @@ public class App {
                 LocalDate.of(2018, 10, 15),
                 actors,
                 new ArrayList<>());
-        System.out.println(gson.toJson(jp.parse(movie.toString())));
+        System.out.println(gson.toJson(movie));
         System.out.println("\n\nAFTER PERSISTING");
         entityManager.persist(movie);
 
-        System.out.println(gson.toJson(jp.parse(movie.toString())));
+        System.out.println(gson.toJson(movie));
     }
 }
