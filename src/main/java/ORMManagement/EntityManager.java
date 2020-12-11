@@ -33,6 +33,145 @@ public class EntityManager implements IEntityManager<Long> {
 
     @Override
     public void persist(Entity<Long> entity) {
+        persist(entity, null, null);
+    }
+
+    private void persist(Entity<Long> entity, String foreignColumnName, Long foreignId) {
+        entity.setId(null);
+
+        HashMap<String, Long> manyToOneIds = null;
+        if (hasManyToOne(entity.getClass())) {
+            manyToOneIds = new HashMap();
+
+            for (Field manyToOneField : getManyToOneFields(entity.getClass())) {
+                String name = manyToOneField.getName();
+                name = "get" + name.substring(0, 1).toUpperCase() + name.substring(1);
+                Class<?> type = manyToOneField.getType();
+                try {
+                    Method getter = entity.getClass().getMethod(name);
+                    Entity<Long> foreign = (Entity<Long>) getter.invoke(entity);
+                    persist(foreign);
+
+                    manyToOneIds.put(
+                            foreign.getClass().getSimpleName().toLowerCase() + "_id",
+                            foreign.getId());
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        ArrayList<Field> simpleFields = getSimpleFields(entity.getClass());
+        Long id = null;
+        StringBuilder columns = new StringBuilder();
+        StringBuilder valueSQL = new StringBuilder();
+        ArrayList<Object> values = new ArrayList<>();
+        if (foreignColumnName != null) {
+            columns.append(foreignColumnName + ",");
+            valueSQL.append("?,");
+            values.add(foreignId);
+        }
+
+        for (Field declaredField : entity.getClass().getDeclaredFields()) {
+            if (!(declaredField.isAnnotationPresent(OneToMany.class) || declaredField.isAnnotationPresent(ManyToOne.class))) {
+                String name = declaredField.getName();
+                if (name.equals("id")){
+                    continue;
+                }
+                String s = declaredField.getName().toLowerCase();
+                columns.append(s);
+                columns.append(",");
+            }
+        }
+        columns.deleteCharAt(columns.lastIndexOf(","));
+        for (Field declaredField : entity.getClass().getDeclaredFields()) {
+            if (!(declaredField.isAnnotationPresent(OneToMany.class) || declaredField.isAnnotationPresent(ManyToOne.class))) {
+                String name = declaredField.getName();
+                if (name.equals("id")){
+                    continue;
+                }
+                name = "get" + name.substring(0, 1).toUpperCase() + name.substring(1);
+                Method getter = null;
+                try {
+                    getter = entity.getClass().getMethod(name);
+                    Object invoke = getter.invoke(entity);
+                    valueSQL.append("?,");
+                    values.add(invoke);
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        if (manyToOneIds != null) {
+            columns.append(",");
+            for (String columnname : manyToOneIds.keySet()) {
+                columns.append(columnname + ",");
+                valueSQL.append("?,");
+                values.add(manyToOneIds.get(columnname));
+            }
+            columns.deleteCharAt(columns.lastIndexOf(","));
+        }
+        valueSQL.deleteCharAt(valueSQL.lastIndexOf(","));
+
+
+        try {
+            String table = entity.getClass().getSimpleName().toLowerCase();
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    "INSERT INTO " + table +
+                            " (" + columns + ") VALUES" +
+                            " (" + valueSQL + ") RETURNING id");
+            for (int i = 0, valuesSize = values.size(); i < valuesSize; i++) {
+                Object value = values.get(i);
+                preparedStatement.setObject(i+1, value);
+            }
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            id = resultSet.getLong(1);
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        entity.setId(id);
+
+
+        if (hasOneToMany(entity.getClass())) {
+            ArrayList<Field> oneToManyFields = getOneToManyFields(entity.getClass());
+            for (Field oneToManyField : oneToManyFields) {
+                String name = oneToManyField.getName();
+                name = "get" + name.substring(0, 1).toUpperCase() + name.substring(1);
+                try {
+                    Method getter = entity.getClass().getMethod(name);
+                    List entities = (List) getter.invoke(entity);
+                    if (entities != null) {
+                        for (Object o : entities) {
+                            Entity<Long> item = (Entity<Long>) o;
+
+                            String fColumnName = entity.getClass().getSimpleName().toLowerCase() + "_id";
+                            persist(
+                                    item,
+                                    fColumnName,
+                                    id);
+                        }
+                    }
+
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 
     }
 
