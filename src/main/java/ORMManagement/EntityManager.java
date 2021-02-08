@@ -79,7 +79,7 @@ public class EntityManager implements IEntityManager<Long> {
         for (Field declaredField : entity.getClass().getDeclaredFields()) {
             if (!(declaredField.isAnnotationPresent(OneToMany.class) || declaredField.isAnnotationPresent(ManyToOne.class))) {
                 String name = declaredField.getName();
-                if (name.equals("id")){
+                if (name.equals("id")) {
                     continue;
                 }
                 String s = declaredField.getName().toLowerCase();
@@ -91,7 +91,7 @@ public class EntityManager implements IEntityManager<Long> {
         for (Field declaredField : entity.getClass().getDeclaredFields()) {
             if (!(declaredField.isAnnotationPresent(OneToMany.class) || declaredField.isAnnotationPresent(ManyToOne.class))) {
                 String name = declaredField.getName();
-                if (name.equals("id")){
+                if (name.equals("id")) {
                     continue;
                 }
                 name = "get" + name.substring(0, 1).toUpperCase() + name.substring(1);
@@ -130,7 +130,7 @@ public class EntityManager implements IEntityManager<Long> {
                             " (" + valueSQL + ") RETURNING id");
             for (int i = 0, valuesSize = values.size(); i < valuesSize; i++) {
                 Object value = values.get(i);
-                preparedStatement.setObject(i+1, value);
+                preparedStatement.setObject(i + 1, value);
             }
 
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -177,6 +177,51 @@ public class EntityManager implements IEntityManager<Long> {
 
     @Override
     public <E extends Entity<Long>> E merge(E entity) {
+        Long id = entity.getId();
+        ArrayList<Field> fields = getSimpleFields(entity.getClass());
+        String tableName = entity.getClass().getSimpleName().toLowerCase();
+        StringBuilder columns = new StringBuilder();
+        ArrayList<Object> values = new ArrayList<>();
+        for (Field declaredField : entity.getClass().getDeclaredFields()) {
+            if (!(declaredField.isAnnotationPresent(OneToMany.class) || declaredField.isAnnotationPresent(ManyToOne.class))) {
+                String name = declaredField.getName();
+                if (name.equals("id")) {
+                    continue;
+                }
+                columns.append(name.toLowerCase());
+                columns.append(" = ?");
+
+                name = "get" + name.substring(0, 1).toUpperCase() + name.substring(1);
+
+                try {
+                    Method getter = entity.getClass().getMethod(name);
+                    Object invoke = getter.invoke(entity);
+                    values.add(invoke);
+
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+                columns.append(",");
+            }
+        }
+        columns.deleteCharAt(columns.lastIndexOf(","));
+
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    "UPDATE " + tableName +
+                            " SET " + columns + " WHERE " + " id = " + id);
+            for (int i = 0, valuesSize = values.size(); i < valuesSize; i++) {
+                Object value = values.get(i);
+                preparedStatement.setObject(i + 1, value);
+            }
+            preparedStatement.execute();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
         return null;
     }
 
